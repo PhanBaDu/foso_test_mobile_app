@@ -12,7 +12,7 @@ final class CategoryViewModel: ObservableObject {
     var selected: CatalogCategory { catalog.categories.first { $0.id == selectedId }! }
     var matches: [CatalogFilter] {
         let normalized = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        return catalog.filters.filter { selected.filterIds.contains($0.id) && $0.name.lowercased().contains(normalized) }
+        return catalog.filters.filter { selected.filterIds.contains($0.id) && (normalized.isEmpty || $0.name.lowercased().contains(normalized)) }
     }
     func select(_ id: String) {
         guard catalog.categories.contains(where: { $0.id == id }) else { return }

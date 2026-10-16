@@ -157,8 +157,6 @@ class _ShopShellState extends State<ShopShell> {
                                       cardPadding: 6,
                                       textGap: 12,
                                       articles: _vm.home.catalog.articles,
-                                      onArticle: (article) =>
-                                          openArticle(context, article),
                                     ),
                                   ],
                                 ),

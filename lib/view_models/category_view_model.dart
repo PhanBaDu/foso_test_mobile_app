@@ -19,7 +19,7 @@ class CategoryViewModel extends ChangeNotifier {
         .where(
           (e) =>
               selected.filterIds.contains(e.id) &&
-              e.name.toLowerCase().contains(query),
+              (query.isEmpty || e.name.toLowerCase().contains(query)),
         )
         .toList(growable: false);
   }

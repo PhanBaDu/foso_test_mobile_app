@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/catalog.dart';
 import '../view_models/category_view_model.dart';
 import '../theme.dart';
-import '../widgets/product_card.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({
@@ -39,51 +39,80 @@ class _CategoryScreenState extends State<CategoryScreen> {
               width: 90,
               child: ColoredBox(
                 color: AppColors.paleBlue,
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: vm.catalog.categories.length,
-                  itemBuilder: (_, i) => InkWell(
-                    key: ValueKey('category-$i'),
-                    onTap: () {
-                      vm.select(vm.catalog.categories[i].id);
-                      _contentController.jumpTo(0);
-                    },
-                    child: Container(
-                      height: 100,
-                      padding: const EdgeInsets.fromLTRB(12, 16, 8, 12),
-                      decoration: BoxDecoration(
-                        color: vm.selectedId == vm.catalog.categories[i].id
-                            ? AppColors.background
-                            : AppColors.paleBlue,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          assetImage('category_air', width: 40, height: 32),
-                          const SizedBox(height: 8),
-                          Expanded(
-                            child: Text(
-                              vm.catalog.categories[i].name.replaceFirst(
-                                'Bộ Lọc ',
-                                'Bộ Lọc\n',
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 11,
-                                height: 1.25,
-                                fontWeight: FontWeight.w600,
-                                color:
-                                    vm.selectedId == vm.catalog.categories[i].id
-                                    ? AppColors.text
-                                    : const Color(0xFF003D80),
-                              ),
+                child: SingleChildScrollView(
+                  child: Stack(
+                    children: [
+                      AnimatedPositioned(
+                        duration: MediaQuery.disableAnimationsOf(context)
+                            ? Duration.zero
+                            : const Duration(milliseconds: 240),
+                        curve: Curves.easeInOutCubic,
+                        top:
+                            vm.catalog.categories.indexWhere(
+                              (category) => category.id == vm.selectedId,
+                            ) *
+                            100.0,
+                        left: 0,
+                        width: 90,
+                        height: 100,
+                        child: const IgnorePointer(
+                          child: DecoratedBox(
+                            decoration: ShapeDecoration(
+                              color: AppColors.background,
+                              shape: _InverseCategorySelection(),
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      Column(
+                        children: List.generate(vm.catalog.categories.length, (
+                          i,
+                        ) {
+                          final category = vm.catalog.categories[i];
+                          return InkWell(
+                            key: ValueKey('category-$i'),
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              vm.select(category.id);
+                              _contentController.jumpTo(0);
+                            },
+                            child: Container(
+                              height: 100,
+                              padding: const EdgeInsets.fromLTRB(12, 16, 8, 12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  assetImage(
+                                    'category_air',
+                                    width: 40,
+                                    height: 32,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Expanded(
+                                    child: Text(
+                                      category.name.replaceFirst(
+                                        'Bộ Lọc ',
+                                        'Bộ Lọc\n',
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        height: 1.25,
+                                        fontWeight: FontWeight.w600,
+                                        color: vm.selectedId == category.id
+                                            ? AppColors.text
+                                            : const Color(0xFF003D80),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -153,11 +182,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => showProductDetails(
-                                  context,
-                                  vm.catalog.products.first,
-                                  () => widget.onBuy(vm.catalog.products.first),
-                                ),
+                                onTap: null,
                                 child: const Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -193,9 +218,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     return const Expanded(child: SizedBox());
                                   }
                                   final filter = matches[position];
-                                  final product = vm.catalog.productById(
-                                    filter.productId,
-                                  );
                                   final label =
                                       filter.name == 'Bộ lọc trong cabin'
                                       ? 'Bộ lọc\ntrong\ncabin'
@@ -208,11 +230,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                         right: column < 2 ? 12 : 0,
                                       ),
                                       child: InkWell(
-                                        onTap: () => showProductDetails(
-                                          context,
-                                          product,
-                                          () => widget.onBuy(product),
-                                        ),
+                                        onTap: null,
                                         child: Column(
                                           children: [
                                             ClipRRect(
@@ -260,4 +278,53 @@ class _CategoryScreenState extends State<CategoryScreen> {
       },
     );
   }
+}
+
+class _InverseCategorySelection extends ShapeBorder {
+  const _InverseCategorySelection();
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
+  @override
+  ShapeBorder scale(double t) => this;
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+    const r = 20.0;
+    const k = 0.55228475;
+    return Path()
+      ..addRRect(
+        RRect.fromRectAndCorners(
+          rect,
+          topLeft: const Radius.circular(r),
+          bottomLeft: const Radius.circular(r),
+        ),
+      )
+      ..moveTo(rect.right - r, rect.top)
+      ..cubicTo(
+        rect.right - r + k * r,
+        rect.top,
+        rect.right,
+        rect.top - r + k * r,
+        rect.right,
+        rect.top - r,
+      )
+      ..lineTo(rect.right, rect.top)
+      ..close()
+      ..moveTo(rect.right - r, rect.bottom)
+      ..cubicTo(
+        rect.right - r + k * r,
+        rect.bottom,
+        rect.right,
+        rect.bottom + r - k * r,
+        rect.right,
+        rect.bottom + r,
+      )
+      ..lineTo(rect.right, rect.bottom)
+      ..close();
+  }
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
+      getOuterPath(rect, textDirection: textDirection);
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
 }

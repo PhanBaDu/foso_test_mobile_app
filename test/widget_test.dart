@@ -8,6 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foso_test_mobile_app/main.dart';
+import 'package:foso_test_mobile_app/widgets/empty_animation.dart';
 import 'package:foso_test_mobile_app/widgets/flash_countdown.dart';
 
 class TestCatalogRepository implements CatalogRepository {
@@ -242,7 +243,13 @@ void main() {
     await tester.pumpAndSettle();
     final animation = find.byKey(const ValueKey('shared-empty-animation'));
     final original = tester.element(animation);
-    expect(find.text('Giỏ hàng'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(SharedEmptyState),
+        matching: find.text('Giỏ hàng'),
+      ),
+      findsOneWidget,
+    );
     await tester.tap(find.byKey(const ValueKey('tab-4')));
     await tester.pumpAndSettle();
     expect(identical(tester.element(animation), original), isTrue);
@@ -288,7 +295,13 @@ void main() {
       find.byKey(const ValueKey('shared-empty-animation')),
       findsOneWidget,
     );
-    expect(find.text('Giỏ hàng'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(SharedEmptyState),
+        matching: find.text('Giỏ hàng'),
+      ),
+      findsOneWidget,
+    );
     expect(find.textContaining('Tổng cộng:'), findsNothing);
     expect(tester.takeException(), isNull);
   });

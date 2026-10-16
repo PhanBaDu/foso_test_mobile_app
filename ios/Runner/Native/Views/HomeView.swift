@@ -4,9 +4,7 @@ import Combine
 struct NativeHomeView: View {
     @ObservedObject var viewModel: HomeViewModel
     let onCategory: (String) -> Void
-    let onProduct: (Product) -> Void
     let onBuy: (Product) -> Void
-    let onArticle: (Article) -> Void
     let onNews: () -> Void
     var isActive = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -33,7 +31,7 @@ struct NativeHomeView: View {
                         productRow().padding(.bottom, 12)
                     }.background(ShopTheme.blue).padding(.top, 18)
                     SectionHeader(spacing: 12, topPadding: 18, title: "Bài Viết Nổi Bật", icon: "tab_news", iconColor: ShopTheme.blue, action: onNews)
-                    NativeArticleList(articles: viewModel.catalog.articles, onSelect: onArticle, gap: 12, textGap: 12).padding(.bottom, 36)
+                    NativeArticleList(articles: viewModel.catalog.articles, gap: 12, textGap: 12).padding(.bottom, 36)
                 }
             }.accessibility(identifier: "native-home")
                 .onReceive(bannerTimer) { _ in
@@ -106,7 +104,7 @@ struct NativeHomeView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 ForEach(viewModel.catalog.products) { product in
-                    NativeProductCard(product: product, flash: flash, limited: limited, onDetails: { onProduct(product) }, onBuy: { onBuy(product) })
+                    NativeProductCard(product: product, flash: flash, limited: limited, onBuy: { onBuy(product) })
                 }
             }
         }.clipped().padding(.horizontal, 12)
@@ -125,7 +123,7 @@ struct NativeHomeView: View {
             HStack(spacing: 12) {
                 promo("recommend_banner").frame(width: 150, height: 291)
                 ForEach(viewModel.catalog.products) { product in
-                    NativeProductCard(product: product, onDetails: { onProduct(product) }, onBuy: { onBuy(product) })
+                    NativeProductCard(product: product, onBuy: { onBuy(product) })
                 }
             }
         }.clipped().padding(.horizontal, 12)

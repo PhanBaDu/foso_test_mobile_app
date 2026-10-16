@@ -19,6 +19,9 @@ final class RunnerTests: XCTestCase {
     func testCategorySearchAndIdentityRouting() throws {
         let vm = CategoryViewModel(catalog: try catalog())
         XCTAssertEqual(vm.selectedId, "air")
+        XCTAssertEqual(vm.matches.map(\.id), vm.catalog.filters.filter { vm.selected.filterIds.contains($0.id) }.map(\.id))
+        XCTAssertFalse(vm.matches.isEmpty)
+        vm.search("   "); XCTAssertFalse(vm.matches.isEmpty)
         vm.search("  CABIN  "); XCTAssertEqual(vm.matches.map(\.id), ["filter-1"])
         vm.select("fuel"); XCTAssertEqual(vm.selected.name, "Bộ Lọc Nhiên Liệu")
         vm.select("missing"); XCTAssertEqual(vm.selectedId, "fuel")

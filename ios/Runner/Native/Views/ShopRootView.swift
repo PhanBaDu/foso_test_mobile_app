@@ -30,9 +30,9 @@ struct NativeShopRootView: View {
         VStack(spacing: 0) {
             NativeHeader(viewModel: viewModel)
             ZStack {
-                NativeHomeView(viewModel: viewModel.home, onCategory: viewModel.openCategory, onProduct: { viewModel.sheet = .product($0) }, onBuy: viewModel.buy, onArticle: { viewModel.sheet = .article($0) }, onNews: { viewModel.selectTab(.news) }, isActive: viewModel.tab == .home)
+                NativeHomeView(viewModel: viewModel.home, onCategory: viewModel.openCategory, onBuy: viewModel.buy, onNews: { viewModel.selectTab(.news) }, isActive: viewModel.tab == .home)
                     .modifier(tabPresentation(.home))
-                NativeCategoryView(viewModel: viewModel.categories, onProduct: { viewModel.sheet = .product($0) })
+                NativeCategoryView(viewModel: viewModel.categories)
                     .modifier(tabPresentation(.category))
                 news.modifier(tabPresentation(.news))
                 // A single persistent Lottie instance serves both empty-state tabs.
@@ -80,7 +80,6 @@ struct NativeShopRootView: View {
                     displayedTab = tab
                 }
             }
-            .sheet(item: $viewModel.sheet) { NativeSheetView(destination: $0, onBuy: viewModel.buy) }
             .accessibility(identifier: "native-shop-root")
     }
     private func tabPresentation(_ tab: ShopTab) -> NativeTabPresentation {
@@ -93,7 +92,6 @@ struct NativeShopRootView: View {
             VStack(spacing: 0) {
                 SectionHeader(spacing: 12, title: "Bài Viết Nổi Bật", icon: "tab_news", iconColor: ShopTheme.blue)
                 NativeArticleList(articles: viewModel.home.catalog.articles,
-                                  onSelect: { viewModel.sheet = .article($0) },
                                   gap: 12, cardPadding: 6, textGap: 12)
                     .padding(.bottom, 36)
             }

@@ -88,10 +88,10 @@ struct NativeHeader: View {
                 }, onCommit: viewModel.submitSearch)
                     .font(ShopTheme.font(15)).autocapitalization(.none).disableAutocorrection(true)
                     .accessibility(identifier: "search-field")
-                Button(action: { viewModel.sheet = .notice("Tìm kiếm bằng hình ảnh sẽ sớm được cập nhật.") }) { FigmaIcon(name: "camera", size: 20, color: ShopTheme.blue) }
+                FigmaIcon(name: "camera", size: 20, color: ShopTheme.blue)
                     .accessibility(label: Text("Tìm kiếm bằng hình ảnh"))
             }.padding(.horizontal, 12).frame(height: 38).background(Color.white).cornerRadius(24).padding(.trailing, 18)
-            Button(action: { viewModel.sheet = .notice("Bạn chưa có thông báo mới.") }) { FigmaIcon(name: "notification", size: 40) }
+            FigmaIcon(name: "notification", size: 40)
                 .accessibility(label: Text("Thông báo"))
         }.buttonStyle(PlainButtonStyle()).padding(.horizontal, 12).padding(.top, 10).padding(.bottom, 11).background(ShopTheme.blue)
             .modifier(HeaderSearchTransition(showsBack: viewModel.returnTab != nil))
@@ -284,11 +284,10 @@ struct NativeProductCard: View {
     let product: Product
     var flash = false
     var limited = false
-    let onDetails: () -> Void
     let onBuy: () -> Void
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Button(action: onDetails) { ShopImage(name: product.image).frame(maxWidth: .infinity, maxHeight: .infinity) }.buttonStyle(PlainButtonStyle())
+            ShopImage(name: product.image).frame(maxWidth: .infinity, maxHeight: .infinity)
             if limited {
                 HStack(spacing: 3) {
                     FigmaIcon(name: "flashsale", size: 12)
@@ -298,7 +297,7 @@ struct NativeProductCard: View {
                 .padding(.horizontal, 4).padding(.vertical, 3)
                 .background(Color(hex: 0xFFB200)).clipShape(Capsule())
             }
-            Button(action: onDetails) { Text(product.name).font(ShopTheme.font(15, .semibold)).lineLimit(2).truncationMode(.tail).multilineTextAlignment(.leading).frame(height: 40, alignment: .topLeading) }.buttonStyle(PlainButtonStyle()).foregroundColor(ShopTheme.text)
+            Group { Text(product.name).font(ShopTheme.font(15, .semibold)).lineLimit(2).truncationMode(.tail).multilineTextAlignment(.leading).frame(height: 40, alignment: .topLeading) }.buttonStyle(PlainButtonStyle()).foregroundColor(ShopTheme.text)
             VStack(alignment: .leading, spacing: 6) {
                 Text(ShopFormat.money(product.price)).font(ShopTheme.font(16, .bold)).foregroundColor(Color(hex: 0xCF1717))
                 HStack(spacing: 12) {
@@ -318,14 +317,13 @@ struct NativeProductCard: View {
 }
 struct NativeArticleList: View {
     let articles: [Article]
-    let onSelect: (Article) -> Void
     var gap: CGFloat = 16
     var cardPadding: CGFloat = 6
     var textGap: CGFloat = 8
     var body: some View {
         VStack(spacing: gap) {
             ForEach(articles) { article in
-                Button(action: { onSelect(article) }) {
+                Group {
                     HStack(spacing: gap) {
                         ShopImage(name: article.image, width: 120, height: 96, fit: .fill).cornerRadius(12)
                         VStack(alignment: .leading, spacing: textGap) {

@@ -24,9 +24,6 @@ class MyApp extends StatelessWidget {
         bodyColor: AppColors.text,
         displayColor: AppColors.text,
       ),
-      bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: Colors.white,
-      ),
       snackBarTheme: const SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
       ),

@@ -30,7 +30,7 @@ class ProductCard extends StatelessWidget {
       children: [
         Expanded(
           child: InkWell(
-            onTap: () => showProductDetails(context, product, onBuy),
+            onTap: null,
             child: Center(child: assetImage(product.image, width: 124)),
           ),
         ),
@@ -60,7 +60,7 @@ class ProductCard extends StatelessWidget {
             ),
           ),
         InkWell(
-          onTap: () => showProductDetails(context, product, onBuy),
+          onTap: null,
           child: SizedBox(
             height: 40,
             child: Text(
@@ -135,54 +135,6 @@ class ProductCard extends StatelessWidget {
           ),
         ),
       ],
-    ),
-  );
-}
-
-void showProductDetails(
-  BuildContext context,
-  Product product,
-  VoidCallback onBuy,
-) {
-  showModalBottomSheet<void>(
-    context: context,
-    showDragHandle: true,
-    isScrollControlled: true,
-    builder: (sheetContext) => SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(child: assetImage(product.image, width: 200, height: 180)),
-            Text(
-              product.name,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '${formatMoney(product.price)} đ',
-              style: TextStyle(
-                color: AppColors.red,
-                fontWeight: FontWeight.w700,
-                fontSize: 22,
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: () {
-                  Navigator.pop(sheetContext);
-                  onBuy();
-                },
-                child: Text('Thêm vào giỏ hàng'),
-              ),
-            ),
-          ],
-        ),
-      ),
     ),
   );
 }

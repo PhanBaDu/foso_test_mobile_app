@@ -136,18 +136,7 @@ class ShopHeader extends StatelessWidget {
                     minHeight: 38,
                   ),
                   tooltip: 'Thông báo',
-                  onPressed: () => showModalBottomSheet<void>(
-                    context: context,
-                    showDragHandle: true,
-                    builder: (_) => const SafeArea(
-                      child: SizedBox(
-                        height: 180,
-                        child: Center(
-                          child: Text('Bạn chưa có thông báo mới.'),
-                        ),
-                      ),
-                    ),
-                  ),
+                  onPressed: null,
                   icon: const FigmaIcon('notification', size: 40),
                 ),
               ),

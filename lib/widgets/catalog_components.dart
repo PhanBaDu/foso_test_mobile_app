@@ -107,13 +107,11 @@ Widget seeAll(
 class ArticleList extends StatelessWidget {
   const ArticleList({
     super.key,
-    required this.onArticle,
     required this.articles,
     this.gap = 16,
     this.cardPadding = 6,
     this.textGap = 0,
   });
-  final ValueChanged<Article> onArticle;
   final List<Article> articles;
   final double gap, cardPadding, textGap;
   @override
@@ -126,7 +124,7 @@ class ArticleList extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           child: InkWell(
-            onTap: () => onArticle(articles[i]),
+            onTap: null,
             borderRadius: BorderRadius.circular(16),
             child: Padding(
               padding: EdgeInsets.all(cardPadding),
@@ -180,36 +178,3 @@ class ArticleList extends StatelessWidget {
     ),
   );
 }
-
-void openArticle(BuildContext context, Article article) =>
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (_) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              assetImage(
-                article.image,
-                width: double.infinity,
-                height: 160,
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                article.title,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                formatDate(article.date),
-                style: TextStyle(color: AppColors.blue),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );

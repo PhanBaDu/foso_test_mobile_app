@@ -6,16 +6,6 @@ enum ShopTab: Int, CaseIterable {
     var title: String { ["Trang chủ", "Giỏ hàng", "Danh mục", "Tin tức", "Tài khoản"][rawValue] }
     var icon: String { ["home", "cart", "category", "news", "account"][rawValue] }
 }
-enum ShopSheet: Identifiable {
-    case product(Product), article(Article), notice(String)
-    var id: String {
-        switch self {
-        case .product(let value): return "product-\(value.id)"
-        case .article(let value): return "article-\(value.id)"
-        case .notice(let value): return "notice-\(value)"
-        }
-    }
-}
 final class ShopViewModel: ObservableObject {
     let home: HomeViewModel
     let categories: CategoryViewModel
@@ -23,7 +13,6 @@ final class ShopViewModel: ObservableObject {
     @Published private(set) var tab: ShopTab = .home
     @Published private(set) var returnTab: ShopTab?
     @Published private(set) var query = ""
-    @Published var sheet: ShopSheet?
     @Published private(set) var toast: String?
     private var subscriptions = Set<AnyCancellable>()
     private var toastDismissal: DispatchWorkItem?

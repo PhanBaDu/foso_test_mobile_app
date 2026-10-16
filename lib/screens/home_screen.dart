@@ -436,7 +436,6 @@ class _HomeScreenState extends State<HomeScreen> {
             gap: 12,
             textGap: 12,
             articles: widget.viewModel.catalog.articles,
-            onArticle: (article) => openArticle(context, article),
           ),
           const SizedBox(height: 12),
         ],
