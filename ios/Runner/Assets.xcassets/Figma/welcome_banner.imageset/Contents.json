@@ -1,0 +1,18 @@
+{
+  "images": [
+    {
+      "idiom": "universal",
+      "filename": "welcome_banner@1x.png",
+      "scale": "1x"
+    },
+    {
+      "idiom": "universal",
+      "filename": "welcome_banner@3x.png",
+      "scale": "3x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

@@ -1,0 +1,282 @@
+{
+  "categories": [
+    {
+      "id": "oil",
+      "name": "Bộ Lọc Dầu",
+      "image": "category_oil",
+      "filterIds": [
+        "filter-0",
+        "filter-1",
+        "filter-2",
+        "filter-3",
+        "filter-4",
+        "filter-5",
+        "filter-6",
+        "filter-7",
+        "filter-8"
+      ]
+    },
+    {
+      "id": "air",
+      "name": "Bộ Lọc Không Khí",
+      "image": "category_air",
+      "filterIds": [
+        "filter-0",
+        "filter-1",
+        "filter-2",
+        "filter-3",
+        "filter-4",
+        "filter-5",
+        "filter-6",
+        "filter-7",
+        "filter-8"
+      ]
+    },
+    {
+      "id": "fuel",
+      "name": "Bộ Lọc Nhiên Liệu",
+      "image": "category_fuel",
+      "filterIds": [
+        "filter-0",
+        "filter-1",
+        "filter-2",
+        "filter-3",
+        "filter-4",
+        "filter-5",
+        "filter-6",
+        "filter-7",
+        "filter-8"
+      ]
+    },
+    {
+      "id": "cabin",
+      "name": "Bộ Lọc Trong Cabin",
+      "image": "category_cabin",
+      "filterIds": [
+        "filter-0",
+        "filter-1",
+        "filter-2",
+        "filter-3",
+        "filter-4",
+        "filter-5",
+        "filter-6",
+        "filter-7",
+        "filter-8"
+      ]
+    },
+    {
+      "id": "air-extra",
+      "name": "Bộ Lọc Không Khí",
+      "image": "filter_7",
+      "filterIds": [
+        "filter-0",
+        "filter-1",
+        "filter-2",
+        "filter-3",
+        "filter-4",
+        "filter-5",
+        "filter-6",
+        "filter-7",
+        "filter-8"
+      ]
+    },
+    {
+      "id": "oil-0",
+      "name": "Bộ Lọc Dầu",
+      "image": "category_air",
+      "filterIds": [
+        "filter-0",
+        "filter-1",
+        "filter-2",
+        "filter-3",
+        "filter-4",
+        "filter-5",
+        "filter-6",
+        "filter-7",
+        "filter-8"
+      ]
+    },
+    {
+      "id": "oil-1",
+      "name": "Bộ Lọc Dầu",
+      "image": "category_air",
+      "filterIds": [
+        "filter-0",
+        "filter-1",
+        "filter-2",
+        "filter-3",
+        "filter-4",
+        "filter-5",
+        "filter-6",
+        "filter-7",
+        "filter-8"
+      ]
+    },
+    {
+      "id": "oil-2",
+      "name": "Bộ Lọc Dầu",
+      "image": "category_air",
+      "filterIds": [
+        "filter-0",
+        "filter-1",
+        "filter-2",
+        "filter-3",
+        "filter-4",
+        "filter-5",
+        "filter-6",
+        "filter-7",
+        "filter-8"
+      ]
+    },
+    {
+      "id": "oil-3",
+      "name": "Bộ Lọc Dầu",
+      "image": "category_air",
+      "filterIds": [
+        "filter-0",
+        "filter-1",
+        "filter-2",
+        "filter-3",
+        "filter-4",
+        "filter-5",
+        "filter-6",
+        "filter-7",
+        "filter-8"
+      ]
+    }
+  ],
+  "featuredCategoryIds": [
+    "air",
+    "oil",
+    "fuel",
+    "cabin",
+    "air-extra"
+  ],
+  "filters": [
+    {
+      "id": "filter-0",
+      "name": "Bộ lọc gió",
+      "image": "filter_0",
+      "productId": "product-0"
+    },
+    {
+      "id": "filter-1",
+      "name": "Bộ lọc trong cabin",
+      "image": "filter_1",
+      "productId": "product-1"
+    },
+    {
+      "id": "filter-2",
+      "name": "Bộ lọc nhiên liệu",
+      "image": "filter_2",
+      "productId": "product-2"
+    },
+    {
+      "id": "filter-3",
+      "name": "Bộ lọc gió",
+      "image": "filter_3",
+      "productId": "product-3"
+    },
+    {
+      "id": "filter-4",
+      "name": "Bộ lọc gió",
+      "image": "filter_4",
+      "productId": "product-4"
+    },
+    {
+      "id": "filter-5",
+      "name": "Bộ lọc gió",
+      "image": "filter_5",
+      "productId": "product-5"
+    },
+    {
+      "id": "filter-6",
+      "name": "Bộ lọc gió",
+      "image": "filter_6",
+      "productId": "product-0"
+    },
+    {
+      "id": "filter-7",
+      "name": "Bộ lọc gió",
+      "image": "filter_7",
+      "productId": "product-1"
+    },
+    {
+      "id": "filter-8",
+      "name": "Bộ lọc gió",
+      "image": "filter_8",
+      "productId": "product-2"
+    }
+  ],
+  "products": [
+    {
+      "id": "product-0",
+      "name": "Lọc gió động cơ Air Filter – Chevrolet",
+      "image": "product",
+      "price": 299000,
+      "originalPrice": 329000,
+      "soldCount": 88
+    },
+    {
+      "id": "product-1",
+      "name": "Lọc gió động cơ Air Filter – Chevrolet",
+      "image": "product",
+      "price": 299000,
+      "originalPrice": 329000,
+      "soldCount": 88
+    },
+    {
+      "id": "product-2",
+      "name": "Lọc gió động cơ Air Filter – Chevrolet",
+      "image": "product",
+      "price": 299000,
+      "originalPrice": 329000,
+      "soldCount": 88
+    },
+    {
+      "id": "product-3",
+      "name": "Lọc gió động cơ Air Filter – Chevrolet",
+      "image": "product",
+      "price": 299000,
+      "originalPrice": 329000,
+      "soldCount": 88
+    },
+    {
+      "id": "product-4",
+      "name": "Lọc gió động cơ Air Filter – Chevrolet",
+      "image": "product",
+      "price": 299000,
+      "originalPrice": 329000,
+      "soldCount": 88
+    },
+    {
+      "id": "product-5",
+      "name": "Lọc gió động cơ Air Filter – Chevrolet",
+      "image": "product",
+      "price": 299000,
+      "originalPrice": 329000,
+      "soldCount": 88
+    }
+  ],
+  "articles": [
+    {
+      "id": "article-0",
+      "title": "Đầu phun sprinkler là gì? Cấu tạo, ứng dụng và nguyên lý hoạt động",
+      "image": "article_0",
+      "date": "2025-02-13"
+    },
+    {
+      "id": "article-1",
+      "title": "Đầu phun sprinkler là gì? Cấu tạo, ứng dụng và nguyên lý hoạt động",
+      "image": "article_1",
+      "date": "2025-02-13"
+    },
+    {
+      "id": "article-2",
+      "title": "Đầu phun sprinkler là gì? Cấu tạo, ứng dụng và nguyên lý hoạt động",
+      "image": "article_2",
+      "date": "2025-02-13"
+    }
+  ],
+  "flashSaleDurationSeconds": 69900
+}

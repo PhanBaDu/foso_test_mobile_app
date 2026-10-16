@@ -1,0 +1,767 @@
+[
+  {
+    "asset": "welcome_banner",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      127,
+      381,
+      192
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      1107,
+      195
+    ]
+  },
+  {
+    "asset": "offer_banner",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      401,
+      381,
+      571
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      1107,
+      510
+    ]
+  },
+  {
+    "asset": "product",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      20,
+      682,
+      152,
+      798
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      396,
+      348
+    ]
+  },
+  {
+    "asset": "promo_red",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      13,
+      1585,
+      191,
+      1715
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      534,
+      390
+    ]
+  },
+  {
+    "asset": "promo_yellow",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      13,
+      1726,
+      191,
+      1855
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      534,
+      387
+    ]
+  },
+  {
+    "asset": "promo_blue",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      202,
+      1585,
+      380,
+      1855
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      534,
+      810
+    ]
+  },
+  {
+    "asset": "recommend_banner",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      1916,
+      162,
+      2207
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      450,
+      873
+    ]
+  },
+  {
+    "asset": "article_0",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      16,
+      2657,
+      136,
+      2738
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      360,
+      243
+    ]
+  },
+  {
+    "asset": "article_1",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      16,
+      2761,
+      136,
+      2842
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      360,
+      243
+    ]
+  },
+  {
+    "asset": "article_2",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      16,
+      2865,
+      136,
+      2946
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      360,
+      243
+    ]
+  },
+  {
+    "asset": "category_air",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      25,
+      264,
+      78,
+      305
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      159,
+      123
+    ]
+  },
+  {
+    "asset": "category_oil",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      108,
+      264,
+      162,
+      305
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      162,
+      123
+    ]
+  },
+  {
+    "asset": "category_fuel",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      190,
+      264,
+      246,
+      305
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      168,
+      123
+    ]
+  },
+  {
+    "asset": "category_cabin",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      272,
+      264,
+      327,
+      305
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      165,
+      123
+    ]
+  },
+  {
+    "asset": "brand_0",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      1069,
+      81,
+      1122
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      207,
+      159
+    ]
+  },
+  {
+    "asset": "brand_1",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      87,
+      1069,
+      156,
+      1122
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      207,
+      159
+    ]
+  },
+  {
+    "asset": "brand_2",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      162,
+      1069,
+      231,
+      1122
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      207,
+      159
+    ]
+  },
+  {
+    "asset": "brand_3",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      237,
+      1069,
+      306,
+      1122
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      207,
+      159
+    ]
+  },
+  {
+    "asset": "brand_4",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      312,
+      1069,
+      381,
+      1122
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      207,
+      159
+    ]
+  },
+  {
+    "asset": "brand_5",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      1130,
+      81,
+      1183
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      207,
+      159
+    ]
+  },
+  {
+    "asset": "brand_6",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      87,
+      1130,
+      156,
+      1183
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      207,
+      159
+    ]
+  },
+  {
+    "asset": "brand_7",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      162,
+      1130,
+      231,
+      1183
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      207,
+      159
+    ]
+  },
+  {
+    "asset": "brand_8",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      237,
+      1130,
+      306,
+      1183
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      207,
+      159
+    ]
+  },
+  {
+    "asset": "brand_9",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      312,
+      1130,
+      381,
+      1183
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      207,
+      159
+    ]
+  },
+  {
+    "asset": "filter_0",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      102,
+      215,
+      174,
+      285
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      216,
+      210
+    ]
+  },
+  {
+    "asset": "filter_1",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      207,
+      215,
+      278,
+      285
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      213,
+      210
+    ]
+  },
+  {
+    "asset": "filter_2",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      310,
+      215,
+      381,
+      285
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      213,
+      210
+    ]
+  },
+  {
+    "asset": "filter_3",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      102,
+      350,
+      174,
+      420
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      216,
+      210
+    ]
+  },
+  {
+    "asset": "filter_4",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      207,
+      350,
+      278,
+      420
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      213,
+      210
+    ]
+  },
+  {
+    "asset": "filter_5",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      310,
+      350,
+      381,
+      420
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      213,
+      210
+    ]
+  },
+  {
+    "asset": "filter_6",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      102,
+      455,
+      174,
+      525
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      216,
+      210
+    ]
+  },
+  {
+    "asset": "filter_7",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      207,
+      455,
+      278,
+      525
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      213,
+      210
+    ]
+  },
+  {
+    "asset": "filter_8",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      310,
+      455,
+      381,
+      525
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      213,
+      210
+    ]
+  },
+  {
+    "asset": "ic_home",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      33,
+      2978,
+      58,
+      3003
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      75,
+      75
+    ]
+  },
+  {
+    "asset": "ic_cart",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      108,
+      2978,
+      134,
+      3003
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      78,
+      75
+    ]
+  },
+  {
+    "asset": "ic_category",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      184,
+      2978,
+      209,
+      3003
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      75,
+      75
+    ]
+  },
+  {
+    "asset": "ic_news",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      260,
+      2978,
+      285,
+      3003
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      75,
+      75
+    ]
+  },
+  {
+    "asset": "ic_account",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      335,
+      2978,
+      360,
+      3003
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      75,
+      75
+    ]
+  },
+  {
+    "asset": "ic_search",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      24,
+      62,
+      44,
+      82
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      60,
+      60
+    ]
+  },
+  {
+    "asset": "ic_camera",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      295,
+      60,
+      320,
+      83
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      75,
+      69
+    ]
+  },
+  {
+    "asset": "ic_notification",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      347,
+      54,
+      377,
+      85
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      90,
+      93
+    ]
+  },
+  {
+    "asset": "ic_back",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      20,
+      59,
+      38,
+      83
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      54,
+      72
+    ]
+  },
+  {
+    "asset": "ic_right",
+    "source": "design/figma/Category@3x.png",
+    "bounds_at_1x": [
+      365,
+      127,
+      381,
+      143
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      48,
+      48
+    ]
+  },
+  {
+    "asset": "ic_chevrons",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      369,
+      1212,
+      381,
+      1225
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      36,
+      39
+    ]
+  },
+  {
+    "asset": "ic_brand",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      1032,
+      36,
+      1056
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      72,
+      72
+    ]
+  },
+  {
+    "asset": "ic_bestseller",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      1203,
+      36,
+      1227
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      72,
+      72
+    ]
+  },
+  {
+    "asset": "ic_recommend",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      1877,
+      36,
+      1901
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      72,
+      72
+    ]
+  },
+  {
+    "asset": "ic_new_arrivals",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      2240,
+      36,
+      2264
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      72,
+      72
+    ]
+  },
+  {
+    "asset": "ic_article",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      2606,
+      36,
+      2630
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      72,
+      72
+    ]
+  },
+  {
+    "asset": "ic_flash",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      12,
+      619,
+      36,
+      643
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      72,
+      72
+    ]
+  },
+  {
+    "asset": "ic_fire",
+    "source": "design/figma/Home@3x.png",
+    "bounds_at_1x": [
+      92,
+      917,
+      110,
+      937
+    ],
+    "export_scale": 3,
+    "pixels_3x": [
+      54,
+      60
+    ]
+  }
+]
