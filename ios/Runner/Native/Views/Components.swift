@@ -39,6 +39,7 @@ struct SeeAllButton: View {
 }
 struct SectionHeader: View {
     var spacing: CGFloat? = nil
+    var topPadding: CGFloat? = nil
     let title: String
     var icon: String? = nil
     var iconColor: Color? = nil
@@ -54,7 +55,7 @@ struct SectionHeader: View {
             if let accessory = accessory { accessory }
             Spacer(minLength: 4)
             if let action = action { SeeAllButton(color: actionColor ?? (light ? .white : ShopTheme.blue), action: action) }
-        }.padding(.horizontal, 12).padding(.top, spacing ?? 24).padding(.bottom, spacing ?? 16)
+        }.padding(.horizontal, 12).padding(.top, topPadding ?? spacing ?? 24).padding(.bottom, spacing ?? 16)
     }
 }
 struct TopRoundedShape: Shape {

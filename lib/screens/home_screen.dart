@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: 'Danh mục tiêu biểu',
             color: AppColors.featuredCategoryTitle,
             gap: 12,
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.fromLTRB(12, 18, 12, 12),
           ),
           SizedBox(
             height: 98,
@@ -251,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.only(top: 12, bottom: 18),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
@@ -319,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SectionHeading(
             gap: 12,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.fromLTRB(12, 18, 12, 12),
             title: 'Thương Hiệu Nổi Bật',
             icon: 'brand',
           ),
@@ -345,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SectionHeading(
             gap: 12,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.fromLTRB(12, 18, 12, 12),
             title: 'Sản Phẩm Bán Chạy',
             icon: 'like',
             iconColor: AppColors.blue,
@@ -376,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SectionHeading(
             gap: 12,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.fromLTRB(12, 18, 12, 12),
             title: 'Dành Cho Bạn',
             icon: 'star',
             iconColor: AppColors.blue,
@@ -405,7 +405,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 18),
           Container(
             color: AppColors.blue,
             padding: const EdgeInsets.only(bottom: 12),
@@ -426,7 +426,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SectionHeading(
             gap: 12,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.fromLTRB(12, 18, 12, 12),
             title: 'Bài Viết Nổi Bật',
             icon: 'tab_news',
             iconColor: AppColors.blue,

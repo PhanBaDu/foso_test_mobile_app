@@ -21,18 +21,18 @@ struct NativeHomeView: View {
                     featuredCategories
                     carousel(width: max(1, geometry.size.width - 24))
                     flashSale
-                    SectionHeader(spacing: 12, title: "Thương Hiệu Nổi Bật", icon: "brand")
+                    SectionHeader(spacing: 12, topPadding: 18, title: "Thương Hiệu Nổi Bật", icon: "brand")
                     brands
-                    SectionHeader(spacing: 12, title: "Sản Phẩm Bán Chạy", icon: "like", iconColor: ShopTheme.blue, action: { onCategory("air") })
+                    SectionHeader(spacing: 12, topPadding: 18, title: "Sản Phẩm Bán Chạy", icon: "like", iconColor: ShopTheme.blue, action: { onCategory("air") })
                     productRow(limited: true)
                     promos(width: max(1, geometry.size.width - 24))
-                    SectionHeader(spacing: 12, title: "Dành Cho Bạn", icon: "star", iconColor: ShopTheme.blue, action: { onCategory("air") })
+                    SectionHeader(spacing: 12, topPadding: 18, title: "Dành Cho Bạn", icon: "star", iconColor: ShopTheme.blue, action: { onCategory("air") })
                     recommended
                     VStack(spacing: 0) {
                         SectionHeader(spacing: 12, title: "Hàng Mới Về", icon: "new-arrivals", color: .white, actionColor: .white, action: { onCategory("air") })
                         productRow().padding(.bottom, 12)
-                    }.background(ShopTheme.blue).padding(.top, 12)
-                    SectionHeader(spacing: 12, title: "Bài Viết Nổi Bật", icon: "tab_news", iconColor: ShopTheme.blue, action: onNews)
+                    }.background(ShopTheme.blue).padding(.top, 18)
+                    SectionHeader(spacing: 12, topPadding: 18, title: "Bài Viết Nổi Bật", icon: "tab_news", iconColor: ShopTheme.blue, action: onNews)
                     NativeArticleList(articles: viewModel.catalog.articles, onSelect: onArticle, gap: 12, textGap: 12).padding(.bottom, 36)
                 }
             }.accessibility(identifier: "native-home")
@@ -75,7 +75,7 @@ struct NativeHomeView: View {
             }
         }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.20))
-        .frame(maxWidth: .infinity).padding(.top, 12).padding(.bottom, 12)
+        .frame(maxWidth: .infinity).padding(.top, 12).padding(.bottom, 18)
     }
     private var flashSale: some View {
         VStack(spacing: 0) {
@@ -140,7 +140,7 @@ private struct NativeFeaturedCategories: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            SectionHeader(spacing: 12, title: "Danh mục tiêu biểu", color: ShopTheme.featuredCategoryTitle)
+            SectionHeader(spacing: 12, topPadding: 18, title: "Danh mục tiêu biểu", color: ShopTheme.featuredCategoryTitle)
             FeaturedCategoriesScroller(categories: categories, onCategory: onCategory) { value in
                 progress = value
             }.frame(height: 98)
