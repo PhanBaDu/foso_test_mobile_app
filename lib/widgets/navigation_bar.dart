@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
+import 'flash_countdown.dart';
 
 class ShopNavigationBar extends StatelessWidget {
   const ShopNavigationBar({
@@ -70,18 +71,42 @@ class ShopNavigationBar extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Badge(
-                        isLabelVisible: i == 1 && cartCount > 0,
-                        label: Text(
-                          '$cartCount',
-                          style: const TextStyle(fontSize: 9),
-                        ),
-                        backgroundColor: const Color(0xFFFF4545),
-                        child: FigmaIcon(
-                          'tab_${icons[i]}${active ? "_active" : ""}',
-                          color: color,
-                          size: 25,
-                        ),
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          FigmaIcon(
+                            'tab_${icons[i]}${active ? "_active" : ""}',
+                            color: color,
+                            size: 25,
+                          ),
+                          if (i == 1)
+                            Positioned(
+                              right: -8,
+                              top: -5,
+                              child: AnimatedScale(
+                                scale: cartCount > 0 ? 1 : 0,
+                                duration:
+                                    MediaQuery.disableAnimationsOf(context)
+                                    ? Duration.zero
+                                    : const Duration(milliseconds: 220),
+                                child: Container(
+                                  key: const ValueKey('cart-count-badge'),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 16,
+                                    minHeight: 16,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.red,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: RollingNumber(value: '$cartCount'),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                       const SizedBox(height: 5),
                       Text(

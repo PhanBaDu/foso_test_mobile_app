@@ -45,7 +45,7 @@ class SharedEmptyState extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                isCart ? 'Giỏ hàng của bạn đang trống' : 'Tài khoản',
+                isCart ? 'Giỏ hàng' : 'Tài khoản',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,

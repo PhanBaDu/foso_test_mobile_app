@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../data/catalog_repository.dart';
 import '../models/catalog.dart';
-import '../screens/cart_screen.dart';
 import '../screens/category_screen.dart';
 import '../screens/home_screen.dart';
 import '../theme.dart';
@@ -93,9 +92,7 @@ class _ShopShellState extends State<ShopShell> {
           ),
         );
       }
-      final showEmpty =
-          _vm.tab == ShopTab.account ||
-          (_vm.tab == ShopTab.cart && _vm.cart.lines.isEmpty);
+      final showEmpty = _vm.tab == ShopTab.account || _vm.tab == ShopTab.cart;
       final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
       return Stack(
         children: [
@@ -140,7 +137,7 @@ class _ShopShellState extends State<ShopShell> {
                                 onBuy: _buy,
                                 onNews: () => _selectTab(3),
                               ),
-                              CartScreen(viewModel: _vm.cart),
+                              const SizedBox.shrink(),
                               CategoryScreen(
                                 viewModel: _vm.categories,
                                 onBuy: _buy,

@@ -246,8 +246,8 @@ struct NativeNavigationBar: View {
                                     .opacity(selectedTab == tab ? 1 : 0)
                             }
                             .modifier(TabAppearanceAnimation(active: selectedTab == tab))
-                            if tab == .cart && viewModel.cart.itemCount > 0 {
-                                Text("\(viewModel.cart.itemCount)").font(ShopTheme.font(9)).foregroundColor(.white).padding(3).background(ShopTheme.red).clipShape(Circle()).offset(x: 8, y: -5)
+                            if tab == .cart {
+                                CartCountBadge(count: viewModel.cart.itemCount).offset(x: 8, y: -5)
                             }
                         }.padding(.top, 3)
                         ZStack {
@@ -395,5 +395,29 @@ struct SalesProgress: View {
                     .offset(x: min(max(0, geometry.size.width - 22), max(0, geometry.size.width * progress - 11)))
             }.frame(height: 22)
         }.frame(height: 22).accessibility(hidden: true)
+    }
+}
+
+private struct CartCountBadge: View {
+    let count: Int
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach(Array(String(count)).indices, id: \.self) { index in
+                ZStack {
+                    Text(String(Array(String(count))[index]))
+                        .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                        .foregroundColor(.white).id(Array(String(count))[index])
+                        .transition(.asymmetric(insertion: .offset(y: -8).combined(with: .opacity),
+                                                removal: .offset(y: 8).combined(with: .opacity)))
+                }.frame(width: 6, height: 12).clipped()
+            }
+        }
+        .padding(.horizontal, 4).frame(minWidth: 16, minHeight: 16)
+        .background(Capsule().fill(ShopTheme.red))
+        .scaleEffect(count > 0 ? 1 : 0.5).opacity(count > 0 ? 1 : 0)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.22))
+        .accessibilityElement(children: .ignore).accessibility(label: Text("Giỏ hàng, \(count) sản phẩm"))
+        .accessibility(hidden: count == 0)
     }
 }

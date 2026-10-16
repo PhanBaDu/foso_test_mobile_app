@@ -109,7 +109,7 @@ struct NativeEmptyState: View {
             NativeEmptyAnimation(isPlaying: isPlaying)
                 .frame(maxWidth: 280).frame(height: 190)
             ZStack {
-                Text("Giỏ hàng của bạn đang trống").opacity(isCart ? 1 : 0)
+                Text("Giỏ hàng").opacity(isCart ? 1 : 0)
                 Text("Tài khoản").opacity(isCart ? 0 : 1)
             }
                 .font(ShopTheme.emptyTitleFont)

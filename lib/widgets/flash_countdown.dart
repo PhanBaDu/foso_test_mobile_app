@@ -66,13 +66,14 @@ class _CountdownTile extends StatelessWidget {
 }
 
 class _RollingDigit extends StatelessWidget {
-  const _RollingDigit({required this.value});
+  const _RollingDigit({required this.value, this.fontSize = 13});
   final String value;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) => SizedBox(
-    width: 8,
-    height: 18,
+    width: fontSize * 0.62,
+    height: fontSize * 1.4,
     child: ClipRect(
       child: AnimatedSwitcher(
         duration: MediaQuery.disableAnimationsOf(context)
@@ -96,8 +97,8 @@ class _RollingDigit extends StatelessWidget {
         child: Text(
           value,
           key: ValueKey(value),
-          style: const TextStyle(
-            fontSize: 13,
+          style: TextStyle(
+            fontSize: fontSize,
             fontWeight: FontWeight.w600,
             color: Colors.white,
             fontFeatures: [FontFeature.tabularFigures()],
@@ -105,5 +106,19 @@ class _RollingDigit extends StatelessWidget {
         ),
       ),
     ),
+  );
+}
+
+class RollingNumber extends StatelessWidget {
+  const RollingNumber({super.key, required this.value, this.fontSize = 9});
+  final String value;
+  final double fontSize;
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      for (var i = 0; i < value.length; i++)
+        _RollingDigit(value: value[i], fontSize: fontSize),
+    ],
   );
 }

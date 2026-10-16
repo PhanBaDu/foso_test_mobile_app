@@ -32,8 +32,6 @@ struct NativeShopRootView: View {
             ZStack {
                 NativeHomeView(viewModel: viewModel.home, onCategory: viewModel.openCategory, onProduct: { viewModel.sheet = .product($0) }, onBuy: viewModel.buy, onArticle: { viewModel.sheet = .article($0) }, onNews: { viewModel.selectTab(.news) }, isActive: viewModel.tab == .home)
                     .modifier(tabPresentation(.home))
-                NativeCartView(viewModel: viewModel.cart)
-                    .modifier(tabPresentation(.cart))
                 NativeCategoryView(viewModel: viewModel.categories, onProduct: { viewModel.sheet = .product($0) })
                     .modifier(tabPresentation(.category))
                 news.modifier(tabPresentation(.news))
@@ -102,7 +100,7 @@ struct NativeShopRootView: View {
         }
     }
     private func showsEmptyState(_ tab: ShopTab) -> Bool {
-        tab == .account || (tab == .cart && viewModel.cart.lines.isEmpty)
+        tab == .account || tab == .cart
     }
 
 }

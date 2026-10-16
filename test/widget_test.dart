@@ -242,7 +242,7 @@ void main() {
     await tester.pumpAndSettle();
     final animation = find.byKey(const ValueKey('shared-empty-animation'));
     final original = tester.element(animation);
-    expect(find.text('Giỏ hàng của bạn đang trống'), findsOneWidget);
+    expect(find.text('Giỏ hàng'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('tab-4')));
     await tester.pumpAndSettle();
     expect(identical(tester.element(animation), original), isTrue);
@@ -263,19 +263,33 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Buying updates cart and quantity can be removed', (
+  testWidgets('Buying updates the badge while Cart keeps the shared Lottie', (
     tester,
   ) async {
     await pumpShop(tester);
     await tester.ensureVisible(find.text('Mua ngay').first);
     await tester.tap(find.text('Mua ngay').first);
     await tester.pumpAndSettle();
+    final badge = find.byKey(const ValueKey('cart-count-badge'));
+    expect(
+      find.descendant(of: badge, matching: find.text('1')),
+      findsOneWidget,
+    );
+    expect(find.text('Đã thêm sản phẩm vào giỏ hàng'), findsOneWidget);
+    await tester.tap(find.text('Mua ngay').first);
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: badge, matching: find.text('2')),
+      findsOneWidget,
+    );
     await tester.tap(find.byKey(const ValueKey('tab-1')));
     await tester.pumpAndSettle();
-    expect(find.text('Tổng cộng: 299,000 đ'), findsOneWidget);
-    await tester.tap(find.byTooltip('Giảm số lượng'));
-    await tester.pumpAndSettle();
-    expect(find.text('Giỏ hàng của bạn đang trống'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('shared-empty-animation')),
+      findsOneWidget,
+    );
+    expect(find.text('Giỏ hàng'), findsOneWidget);
+    expect(find.textContaining('Tổng cộng:'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
