@@ -14,6 +14,8 @@ enum ShopTheme {
     static let muted = Color(hex: 0x919EAB)
     static let flash = Color(hex: 0xFF6948)
     static let red = Color(hex: 0xEF382F)
+    static let emptyTitleFont = Font.system(size: 18, weight: .semibold, design: .rounded)
+    static let emptyDescriptionFont = Font.system(size: 14, weight: .regular, design: .rounded)
     static func font(_ size: CGFloat, _ weight: Font.Weight = .regular) -> Font {
         let face = weight == .bold ? "Bold" : weight == .semibold ? "SemiBold" : "Regular"
         return .custom("Inter-\(face)", size: size)

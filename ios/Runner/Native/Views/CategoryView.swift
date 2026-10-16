@@ -23,7 +23,7 @@ struct NativeCategoryView: View {
                         HStack {
                             Text(viewModel.selected.name).font(ShopTheme.font(16, .bold))
                             Spacer(minLength: 0)
-                            FigmaIcon(name: "right", size: 16)
+                            FigmaIcon(name: "arrow-right-2", size: 24, color: ShopTheme.text)
                         }.frame(height: 56)
                         Divider()
                         if viewModel.matches.isEmpty {

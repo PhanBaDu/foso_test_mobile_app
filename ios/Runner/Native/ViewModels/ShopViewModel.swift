@@ -21,6 +21,7 @@ final class ShopViewModel: ObservableObject {
     let categories: CategoryViewModel
     let cart: CartViewModel
     @Published private(set) var tab: ShopTab = .home
+    @Published private(set) var returnTab: ShopTab?
     @Published private(set) var query = ""
     @Published var sheet: ShopSheet?
     @Published private(set) var toast: String?
@@ -34,14 +35,24 @@ final class ShopViewModel: ObservableObject {
         cart.objectWillChange.sink { [weak self] _ in self?.objectWillChange.send() }.store(in: &subscriptions)
     }
     func selectTab(_ value: ShopTab) {
+        returnTab = nil
         query = ""; categories.search(""); tab = value
     }
-    func openCategory(_ id: String) { categories.select(id); tab = .category }
+    func beginSearch() {
+        guard tab != .category else { return }
+        returnTab = tab
+        tab = .category
+    }
+    func goBack() {
+        guard let previous = returnTab else { return }
+        selectTab(previous)
+    }
+    func openCategory(_ id: String) { categories.select(id); beginSearch() }
     func search(_ value: String) {
         query = value; categories.search(value)
-        if !value.isEmpty { tab = .category }
+        if !value.isEmpty { beginSearch() }
     }
-    func submitSearch() { tab = .category }
+    func submitSearch() { beginSearch() }
     func buy(_ product: Product) {
         cart.add(product)
         toastDismissal?.cancel()

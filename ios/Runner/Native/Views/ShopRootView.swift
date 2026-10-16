@@ -31,7 +31,7 @@ struct NativeShopRootView: View {
             ZStack {
                 NativeHomeView(viewModel: viewModel.home, onCategory: viewModel.openCategory, onProduct: { viewModel.sheet = .product($0) }, onBuy: viewModel.buy, onArticle: { viewModel.sheet = .article($0) }, onNews: { viewModel.selectTab(.news) })
                     .modifier(tabPresentation(.home))
-                NativeCartView(viewModel: viewModel.cart)
+                NativeCartView(viewModel: viewModel.cart, isActive: viewModel.tab == .cart)
                     .modifier(tabPresentation(.cart))
                 NativeCategoryView(viewModel: viewModel.categories, onProduct: { viewModel.sheet = .product($0) })
                     .modifier(tabPresentation(.category))
@@ -71,11 +71,11 @@ struct NativeShopRootView: View {
         }
     }
     private var account: some View {
-        VStack(spacing: 16) {
-            FigmaIcon(name: "account", size: 44, color: ShopTheme.blue).padding(16).background(ShopTheme.paleBlue).clipShape(Circle())
-            Text("Tài khoản").font(ShopTheme.font(20, .semibold))
-            Text("Chào mừng bạn đến với FOSO").font(ShopTheme.font(14)).foregroundColor(ShopTheme.muted)
-        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+        NativeEmptyState(
+            title: "Tài khoản",
+            description: "Chào mừng bạn đến với FOSO",
+            isPlaying: viewModel.tab == .account
+        )
     }
 }
 

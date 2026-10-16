@@ -23,7 +23,20 @@ final class NativeHostingController<Content: View>: UIHostingController<Content>
         tap.cancelsTouchesInView = false
         tap.delegate = self
         view.addGestureRecognizer(tap)
+        NotificationCenter.default.addObserver(self, selector: #selector(addKeyboardDismissButton(_:)),
+                                               name: UITextField.textDidBeginEditingNotification, object: nil)
     }
+
+    @objc private func addKeyboardDismissButton(_ notification: Notification) {
+        guard let field = notification.object as? UITextField,
+              field.isDescendant(of: view) else { return }
+        let accessory = KeyboardDismissAccessory(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 72))
+        accessory.closeButton.addTarget(self, action: #selector(dismissKeyboard), for: .touchUpInside)
+        field.inputAccessoryView = accessory
+        field.reloadInputViews()
+    }
+
+    deinit { NotificationCenter.default.removeObserver(self) }
 
     @objc private func dismissKeyboard() { view.endEditing(true) }
 
@@ -41,4 +54,41 @@ final class NativeHostingController<Content: View>: UIHostingController<Content>
                            shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool { true }
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
+}
+
+// Transparent accessory keeps only the floating button visible above the keyboard.
+private final class KeyboardDismissAccessory: UIView {
+    let closeButton = UIButton(type: .system)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .clear
+        autoresizingMask = [.flexibleWidth]
+        closeButton.backgroundColor = UIColor(red: 0.94, green: 0.945, blue: 0.95, alpha: 1)
+        closeButton.tintColor = UIColor(white: 0.10, alpha: 1)
+        closeButton.setImage(UIImage(systemName: "keyboard.chevron.compact.down",
+                                    withConfiguration: UIImage.SymbolConfiguration(pointSize: 19, weight: .medium)), for: .normal)
+        closeButton.accessibilityLabel = "Đóng bàn phím"
+        closeButton.layer.cornerRadius = 26
+        closeButton.layer.borderWidth = 1
+        closeButton.layer.borderColor = UIColor.white.cgColor
+        closeButton.layer.shadowColor = UIColor.black.cgColor
+        closeButton.layer.shadowOpacity = 0.08
+        closeButton.layer.shadowRadius = 12
+        closeButton.layer.shadowOffset = CGSize(width: 0, height: 4)
+        addSubview(closeButton)
+    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        closeButton.frame = CGRect(x: bounds.width - safeAreaInsets.right - 16 - 52,
+                                   y: bounds.height - 12 - 52, width: 52, height: 52)
+        closeButton.layer.shadowPath = UIBezierPath(ovalIn: closeButton.bounds).cgPath
+    }
+
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hit = super.hitTest(point, with: event)
+        return hit === self ? nil : hit
+    }
 }

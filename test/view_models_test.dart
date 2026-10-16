@@ -99,6 +99,38 @@ void main() {
       expect(vm.categories.query, isEmpty);
     },
   );
+  test(
+    'Direct category has no back route; search returns to its original tab',
+    () async {
+      final vm = ShopViewModel(StubRepository(() async => fixture()));
+      addTearDown(vm.dispose);
+      await vm.load();
+      vm.selectTab(ShopTab.category);
+      vm.beginSearch();
+      expect(vm.returnTab, isNull);
+      for (final origin in [
+        ShopTab.home,
+        ShopTab.cart,
+        ShopTab.news,
+        ShopTab.account,
+      ]) {
+        vm.selectTab(origin);
+        vm.beginSearch();
+        vm.search('gió');
+        vm.search('gió động cơ');
+        expect(vm.tab, ShopTab.category);
+        expect(vm.returnTab, origin);
+        vm.goBack();
+        expect(vm.tab, origin);
+        expect(vm.returnTab, isNull);
+      }
+      vm.openCategory('cabin');
+      expect(vm.returnTab, ShopTab.account);
+      vm.selectTab(ShopTab.category);
+      expect(vm.returnTab, isNull);
+    },
+  );
+
   test('Completing a disposed load never notifies a dead ViewModel', () async {
     final completer = Completer<CatalogData>();
     final vm = ShopViewModel(StubRepository(() => completer.future));

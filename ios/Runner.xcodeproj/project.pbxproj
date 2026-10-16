@@ -30,6 +30,7 @@
 		C4A36548D8612B1014162219 /* SecondaryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD6D742CE27141237CD0D6; };
 		49B20B5667B207E917A0F4F1 /* ShopRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0D63622579FAF1BB774ED7; };
 		F1373355A83AF7745519CC68 /* NativeResources in Resources */ = {isa = PBXBuildFile; fileRef = 43A56FC28C9DC99569B4B842; };
+        AA4040000000000000000001 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = AA4040000000000000000002 /* Lottie */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
+                AA4040000000000000000001 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,6 +218,7 @@
 			);
 			name = Runner;
 			packageProductDependencies = (
+                AA4040000000000000000002 /* Lottie */,
 				78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */,
 			);
 			productName = Runner;
@@ -252,6 +255,7 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
+                AA4040000000000000000003 /* lottie-spm */,
 				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
@@ -713,7 +717,19 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+        AA4040000000000000000003 /* lottie-spm */ = {
+            isa = XCRemoteSwiftPackageReference;
+            repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+            requirement = { kind = exactVersion; version = 4.6.1; };
+        };
+/* End XCRemoteSwiftPackageReference section */
 /* Begin XCSwiftPackageProductDependency section */
+        AA4040000000000000000002 /* Lottie */ = {
+            isa = XCSwiftPackageProductDependency;
+            package = AA4040000000000000000003 /* lottie-spm */;
+            productName = Lottie;
+        };
 		78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlutterGeneratedPluginSwiftPackage;

@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import '../core/formatters.dart';
 import '../theme.dart';
+import '../widgets/empty_animation.dart';
 import '../view_models/cart_view_model.dart';
 
 class CartScreen extends StatelessWidget {
-  const CartScreen({super.key, required this.viewModel});
+  const CartScreen({super.key, required this.viewModel, this.active = true});
   final CartViewModel viewModel;
+  final bool active;
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: viewModel,
     builder: (context, _) {
       if (viewModel.lines.isEmpty) {
-        return const Center(
+        return Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              FigmaIcon('cart', size: 64, color: AppColors.muted),
+              EmptyAnimation(active: active),
               SizedBox(height: 16),
               Text('Giỏ hàng của bạn đang trống'),
               SizedBox(height: 8),

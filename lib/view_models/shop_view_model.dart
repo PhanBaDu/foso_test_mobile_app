@@ -18,6 +18,8 @@ class ShopViewModel extends ChangeNotifier {
   CartViewModel get cart => _cart!;
   ShopTab _tab = ShopTab.home;
   ShopTab get tab => _tab;
+  ShopTab? _returnTab;
+  ShopTab? get returnTab => _returnTab;
   bool _loading = false, _disposed = false;
   String? _error;
   bool get loading => _loading;
@@ -47,26 +49,35 @@ class ShopViewModel extends ChangeNotifier {
 
   void selectTab(ShopTab value) {
     _tab = value;
+    _returnTab = null;
     categories.search('');
     notifyListeners();
   }
 
-  void openCategory(String id) {
-    categories.select(id);
+  void beginSearch() {
+    if (_tab == ShopTab.category) return;
+    _returnTab = _tab;
     _tab = ShopTab.category;
     notifyListeners();
+  }
+
+  void goBack() {
+    final previous = _returnTab;
+    if (previous != null) selectTab(previous);
+  }
+
+  void openCategory(String id) {
+    categories.select(id);
+    beginSearch();
   }
 
   void search(String value) {
     categories.search(value);
-    if (value.isNotEmpty) _tab = ShopTab.category;
+    if (value.isNotEmpty) beginSearch();
     notifyListeners();
   }
 
-  void submitSearch() {
-    _tab = ShopTab.category;
-    notifyListeners();
-  }
+  void submitSearch() => beginSearch();
 
   @override
   void dispose() {

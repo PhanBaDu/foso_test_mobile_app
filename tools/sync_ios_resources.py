@@ -31,3 +31,6 @@ write(resources / 'catalog.json', (root / 'assets/data/catalog.json').read_bytes
 for font in (root / 'assets/fonts').iterdir():
     if font.is_file():
         write(resources / 'fonts' / font.name, font.read_bytes())
+
+for animation in (root / 'assets/animations').glob('*.json'):
+    write(resources / 'animations' / animation.name, animation.read_bytes())

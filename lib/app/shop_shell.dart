@@ -10,6 +10,7 @@ import '../view_models/shop_view_model.dart';
 import '../widgets/catalog_components.dart';
 import '../widgets/navigation_bar.dart';
 import '../widgets/shop_header.dart';
+import '../widgets/empty_animation.dart';
 
 class ShopShell extends StatefulWidget {
   const ShopShell({super.key, this.repository});
@@ -78,94 +79,131 @@ class _ShopShellState extends State<ShopShell> {
           ),
         );
       }
-      return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.blue,
-        body: Column(
-          children: [
-            ShopHeader(
-              controller: _search,
-              onBack: _vm.tab == ShopTab.category ? () => _selectTab(0) : null,
-              onChanged: _vm.search,
-              onSubmitted: (_) {
-                FocusScope.of(context).unfocus();
-                _vm.submitSearch();
-              },
-            ),
-            Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(16),
+      final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
+      return Stack(
+        children: [
+          Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: AppColors.blue,
+            body: Column(
+              children: [
+                ShopHeader(
+                  controller: _search,
+                  onBack: _vm.returnTab != null
+                      ? () {
+                          FocusScope.of(context).unfocus();
+                          _search.clear();
+                          _vm.goBack();
+                        }
+                      : null,
+                  onSearchTap: _vm.beginSearch,
+                  onChanged: _vm.search,
+                  onSubmitted: (_) {
+                    FocusScope.of(context).unfocus();
+                    _vm.submitSearch();
+                  },
                 ),
-                child: ColoredBox(
-                  color: AppColors.background,
-                  child: IndexedStack(
-                    index: _vm.tab.index,
-                    children: [
-                      HomeScreen(
-                        viewModel: _vm.home,
-                        onCategory: _vm.openCategory,
-                        onBuy: _buy,
-                        onNews: () => _selectTab(3),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
+                    child: ColoredBox(
+                      color: AppColors.background,
+                      child: IndexedStack(
+                        index: _vm.tab.index,
+                        children: [
+                          HomeScreen(
+                            viewModel: _vm.home,
+                            onCategory: _vm.openCategory,
+                            onBuy: _buy,
+                            onNews: () => _selectTab(3),
+                          ),
+                          CartScreen(
+                            viewModel: _vm.cart,
+                            active: _vm.tab == ShopTab.cart,
+                          ),
+                          CategoryScreen(
+                            viewModel: _vm.categories,
+                            onBuy: _buy,
+                          ),
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                const SectionHeading(
+                                  title: 'Bài Viết Nổi Bật',
+                                  icon: 'article',
+                                ),
+                                ArticleList(
+                                  articles: _vm.home.catalog.articles,
+                                  onArticle: (article) =>
+                                      openArticle(context, article),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                EmptyAnimation(
+                                  active: _vm.tab == ShopTab.account,
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  'Tài khoản',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Chào mừng bạn đến với FOSO',
+                                  style: TextStyle(color: AppColors.muted),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      CartScreen(viewModel: _vm.cart),
-                      CategoryScreen(viewModel: _vm.categories, onBuy: _buy),
-                      SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            const SectionHeading(
-                              title: 'Bài Viết Nổi Bật',
-                              icon: 'article',
-                            ),
-                            ArticleList(
-                              articles: _vm.home.catalog.articles,
-                              onArticle: (article) =>
-                                  openArticle(context, article),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CircleAvatar(
-                              radius: 36,
-                              backgroundColor: AppColors.paleBlue,
-                              child: FigmaIcon(
-                                'account',
-                                size: 44,
-                                color: AppColors.blue,
-                              ),
-                            ),
-                            SizedBox(height: 16),
-                            Text(
-                              'Tài khoản',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Chào mừng bạn đến với FOSO',
-                              style: TextStyle(color: AppColors.muted),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
+                ),
+              ],
+            ),
+            bottomNavigationBar: ShopNavigationBar(
+              selected: _vm.tab.index,
+              cartCount: _vm.cart.itemCount,
+              onSelected: _selectTab,
+            ),
+          ),
+          if (keyboardHeight > 0)
+            Positioned(
+              right: 16,
+              bottom: keyboardHeight + 12,
+              child: Material(
+                color: const Color(0xFFF0F1F2),
+                elevation: 4,
+                shadowColor: const Color(0x22000000),
+                shape: const CircleBorder(
+                  side: BorderSide(color: Colors.white),
+                ),
+                child: IconButton(
+                  tooltip: 'Đóng bàn phím',
+                  color: const Color(0xFF1A1A1A),
+                  constraints: const BoxConstraints.tightFor(
+                    width: 52,
+                    height: 52,
+                  ),
+                  iconSize: 20,
+                  icon: const Icon(Icons.keyboard_hide_rounded),
+                  onPressed: () =>
+                      FocusManager.instance.primaryFocus?.unfocus(),
                 ),
               ),
             ),
-          ],
-        ),
-        bottomNavigationBar: ShopNavigationBar(
-          selected: _vm.tab.index,
-          cartCount: _vm.cart.itemCount,
-          onSelected: _selectTab,
-        ),
+        ],
       );
     },
   );

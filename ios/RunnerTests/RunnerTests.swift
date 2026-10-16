@@ -40,6 +40,28 @@ final class RunnerTests: XCTestCase {
         vm.buy(vm.home.catalog.products[0]); XCTAssertEqual(vm.cart.itemCount, 1)
         vm.selectTab(.home); XCTAssertTrue(vm.query.isEmpty); XCTAssertTrue(vm.categories.query.isEmpty)
     }
+    func testSearchReturnsToOriginAndDirectCategoryHasNoBackRoute() throws {
+        let vm = ShopViewModel(catalog: try catalog())
+        vm.selectTab(.category)
+        vm.beginSearch()
+        XCTAssertNil(vm.returnTab)
+        for origin in [ShopTab.home, .cart, .news, .account] {
+            vm.selectTab(origin)
+            vm.beginSearch()
+            vm.search("gió")
+            vm.search("gió động cơ")
+            XCTAssertEqual(vm.tab, .category)
+            XCTAssertEqual(vm.returnTab, origin)
+            vm.goBack()
+            XCTAssertEqual(vm.tab, origin)
+            XCTAssertNil(vm.returnTab)
+        }
+        vm.openCategory("cabin")
+        XCTAssertEqual(vm.returnTab, .account)
+        vm.selectTab(.category)
+        XCTAssertNil(vm.returnTab)
+    }
+
     func testCatalogRejectsBrokenReferences() throws {
         let catalog = try catalog()
         let invalid = CatalogData(categories: catalog.categories, featuredCategoryIds: ["missing"], filters: catalog.filters, products: catalog.products, articles: catalog.articles, flashSaleDurationSeconds: 0)
@@ -80,7 +102,7 @@ final class RunnerTests: XCTestCase {
         window.rootViewController = host
         window.makeKeyAndVisible()
         defer { window.isHidden = true; original?.makeKeyAndVisible() }
-        for tab in [ShopTab.home, .category] {
+        for tab in [ShopTab.home, .category, .cart, .account] {
             vm.selectTab(tab)
             host.view.setNeedsLayout()
             host.view.layoutIfNeeded()
@@ -93,7 +115,7 @@ final class RunnerTests: XCTestCase {
             }
             XCTAssertEqual(image.size.width, 393)
             let attachment = XCTAttachment(image: image)
-            attachment.name = "native-\(tab == .home ? "home" : "category")"
+            attachment.name = "native-tab-\(tab.rawValue)"
             attachment.lifetime = .keepAlways
             add(attachment)
         }

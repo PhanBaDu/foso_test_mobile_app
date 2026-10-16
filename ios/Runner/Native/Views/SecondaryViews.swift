@@ -1,19 +1,21 @@
 import SwiftUI
+import Lottie
 
 struct NativeCartView: View {
     @ObservedObject var viewModel: CartViewModel
+    var isActive = true
     var body: some View {
         Group {
             if viewModel.lines.isEmpty {
-                VStack(spacing: 16) {
-                    FigmaIcon(name: "cart", size: 64, color: ShopTheme.muted)
-                    Text("Giỏ hàng của bạn đang trống").font(ShopTheme.font(14))
-                    Text("Khám phá sản phẩm tại Trang chủ").font(ShopTheme.font(12)).foregroundColor(ShopTheme.muted)
-                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                NativeEmptyState(
+                    title: "Giỏ hàng của bạn đang trống",
+                    description: "Khám phá sản phẩm tại Trang chủ",
+                    isPlaying: isActive
+                )
             } else {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 24) {
-                        Text("Giỏ hàng").font(ShopTheme.font(22, .bold))
+                        Text("Giỏ hàng").font(.system(size: 22, weight: .bold, design: .rounded))
                         ForEach(viewModel.lines) { line in
                             HStack(spacing: 12) {
                                 ShopImage(name: line.product.image, width: 96, height: 100)
@@ -59,5 +61,74 @@ struct NativeSheetView: View {
                 }
             }.padding(24)
         }
+    }
+}
+
+struct NativeEmptyAnimation: UIViewRepresentable {
+    let isPlaying: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func makeUIView(context: Context) -> UIView {
+        let container = UIView()
+        let animation = context.coordinator.animation
+        animation.animation = LottieAnimation.named("404", subdirectory: "NativeResources/animations")
+        animation.contentMode = .scaleAspectFit
+        animation.loopMode = .loop
+        animation.backgroundBehavior = .pauseAndRestore
+        animation.respectAnimationFrameRate = false
+        animation.translatesAutoresizingMaskIntoConstraints = false
+        animation.isAccessibilityElement = false
+        container.addSubview(animation)
+        NSLayoutConstraint.activate([
+            animation.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            animation.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            animation.topAnchor.constraint(equalTo: container.topAnchor),
+            animation.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+        return container
+    }
+    func updateUIView(_ view: UIView, context: Context) {
+        let animation = context.coordinator.animation
+        if isPlaying && !reduceMotion {
+            if !animation.isAnimationPlaying { animation.play() }
+        } else {
+            animation.pause()
+        }
+    }
+    static func dismantleUIView(_ view: UIView, coordinator: Coordinator) {
+        coordinator.animation.stop()
+    }
+    func makeCoordinator() -> Coordinator { Coordinator() }
+    final class Coordinator {
+        let animation = LottieAnimationView(configuration: LottieConfiguration(renderingEngine: .automatic))
+    }
+}
+
+// Shared geometry keeps the illustration and text baselines aligned across tabs.
+struct NativeEmptyState: View {
+    let title: String
+    let description: String
+    let isPlaying: Bool
+
+    var body: some View {
+        VStack(spacing: 0) {
+            NativeEmptyAnimation(isPlaying: isPlaying)
+                .frame(maxWidth: 280).frame(height: 190)
+            Text(title)
+                .font(ShopTheme.emptyTitleFont)
+                .foregroundColor(ShopTheme.text)
+                .lineLimit(1).minimumScaleFactor(0.8)
+                .frame(height: 28)
+                .padding(.top, 16)
+            Text(description)
+                .font(ShopTheme.emptyDescriptionFont)
+                .foregroundColor(ShopTheme.muted)
+                .lineLimit(1).minimumScaleFactor(0.8)
+                .frame(height: 22)
+                .padding(.top, 8)
+        }
+        .multilineTextAlignment(.center)
+        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

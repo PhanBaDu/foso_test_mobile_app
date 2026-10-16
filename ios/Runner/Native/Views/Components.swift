@@ -59,22 +59,48 @@ struct TopRoundedShape: Shape {
 struct NativeHeader: View {
     @ObservedObject var viewModel: ShopViewModel
     var body: some View {
-        HStack(spacing: 18) {
-            if viewModel.tab == .category {
-                Button(action: { viewModel.selectTab(.home) }) { FigmaIcon(name: "back", size: 21) }
-                    .accessibility(label: Text("Trang chủ"))
-            }
+        HStack(spacing: 0) {
+            // Keep the input and arrow identities stable while animating only the slot width.
+            Button(action: {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred(intensity: 0.8)
+                viewModel.goBack()
+            }) { FigmaIcon(name: "arrow-left", size: 21) }
+                .accessibility(label: Text("Quay lại"))
+                .frame(width: 21, height: 38)
+                .opacity(viewModel.returnTab != nil ? 1 : 0)
+                .offset(x: viewModel.returnTab != nil ? 0 : -8)
+                .frame(width: viewModel.returnTab != nil ? 39 : 0, alignment: .leading)
+                .clipped()
+                .allowsHitTesting(viewModel.returnTab != nil)
+                .accessibility(hidden: viewModel.returnTab == nil)
             HStack(spacing: 8) {
                 FigmaIcon(name: "search", size: 20, color: ShopTheme.muted)
-                TextField("Tìm kiếm sản phẩm", text: Binding(get: { viewModel.query }, set: viewModel.search), onCommit: viewModel.submitSearch)
+                TextField("Tìm kiếm sản phẩm", text: Binding(get: { viewModel.query }, set: viewModel.search), onEditingChanged: { editing in
+                    if editing { viewModel.beginSearch() }
+                }, onCommit: viewModel.submitSearch)
                     .font(ShopTheme.font(15)).autocapitalization(.none).disableAutocorrection(true)
                     .accessibility(identifier: "search-field")
                 Button(action: { viewModel.sheet = .notice("Tìm kiếm bằng hình ảnh sẽ sớm được cập nhật.") }) { FigmaIcon(name: "camera", size: 20, color: ShopTheme.blue) }
                     .accessibility(label: Text("Tìm kiếm bằng hình ảnh"))
-            }.padding(.horizontal, 12).frame(height: 38).background(Color.white).cornerRadius(24)
+            }.padding(.horizontal, 12).frame(height: 38).background(Color.white).cornerRadius(24).padding(.trailing, 18)
             Button(action: { viewModel.sheet = .notice("Bạn chưa có thông báo mới.") }) { FigmaIcon(name: "notification", size: 40) }
                 .accessibility(label: Text("Thông báo"))
         }.buttonStyle(PlainButtonStyle()).padding(.horizontal, 12).padding(.top, 10).padding(.bottom, 11).background(ShopTheme.blue)
+            .modifier(HeaderSearchTransition(showsBack: viewModel.returnTab != nil))
+    }
+}
+
+private struct HeaderSearchTransition: ViewModifier {
+    let showsBack: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    @ViewBuilder func body(content: Content) -> some View {
+        let animation: Animation? = reduceMotion ? nil : .spring(response: 0.28, dampingFraction: 1, blendDuration: 0.08)
+        if #available(iOS 15.0, *) {
+            content.animation(animation, value: showsBack)
+        } else {
+            content.animation(animation)
+        }
     }
 }
 // UIKit animates only this small surface; tab content does not need per-frame layout.

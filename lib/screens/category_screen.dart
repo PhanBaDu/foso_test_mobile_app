@@ -113,7 +113,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 ),
                               ),
                             ),
-                            const FigmaIcon('right', size: 16),
+                            const FigmaIcon(
+                              'arrow-right-2',
+                              size: 24,
+                              color: AppColors.text,
+                            ),
                           ],
                         ),
                       ),

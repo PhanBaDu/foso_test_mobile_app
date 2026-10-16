@@ -27,6 +27,17 @@ Future<void> pumpShop(WidgetTester tester, {double width = 393}) async {
 }
 
 void main() {
+  setUp(() {
+    TestWidgetsFlutterBinding.ensureInitialized()
+        .platformDispatcher
+        .accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(
+      disableAnimations: true,
+    );
+  });
+  tearDown(() {
+    TestWidgetsFlutterBinding.ensureInitialized().platformDispatcher
+        .clearAccessibilityFeaturesTestValue();
+  });
   setUpAll(() async {
     final loader = FontLoader('Inter');
     for (final name in ['Regular', 'SemiBold', 'Bold']) {
@@ -69,9 +80,25 @@ void main() {
     addTearDown(tester.view.resetViewInsets);
     await tester.pump();
     expect(tester.getTopLeft(tab).dy, originalTop);
+    expect(find.byTooltip('Đóng bàn phím'), findsOneWidget);
     await tester.tapAt(const Offset(200, 210));
     await tester.pump();
     expect(editor.focusNode.hasFocus, isFalse);
+    await tester.tap(find.byType(TextField));
+    await tester.pump();
+    await tester.tap(find.byTooltip('Đóng bàn phím'));
+    await tester.pump();
+    expect(editor.focusNode.hasFocus, isFalse);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Account loads bundled Lottie without layout errors', (
+    tester,
+  ) async {
+    await pumpShop(tester, width: 320);
+    await tester.tap(find.byKey(const ValueKey('tab-4')));
+    await tester.pumpAndSettle();
+    expect(find.text('Chào mừng bạn đến với FOSO'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
