@@ -1,0 +1,20 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "iOS Native: Run Debug with logs",
+      "type": "process",
+      "command": "python3",
+      "args": ["${workspaceFolder}/tools/run_ios_native.py"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "iOS Native: Open Xcode for Swift debugging",
+      "type": "process",
+      "command": "open",
+      "args": ["-a", "Xcode", "${workspaceFolder}/ios/Runner.xcworkspace"],
+      "problemMatcher": []
+    }
+  ]
+}

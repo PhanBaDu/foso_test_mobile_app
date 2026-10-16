@@ -43,7 +43,22 @@ flutter pub get
 
 Android: install/configure the Android SDK and a JDK, select an Android device with `flutter devices`, then run `flutter run -d DEVICE_ID`.
 
-iOS: open `ios/Runner.xcworkspace` in Xcode, select the Runner scheme and an iPhone/simulator, and press Run. Use Xcode/SwiftUI debugging for this native interface.
+iOS native debugging: open `ios/Runner.xcworkspace` in Xcode, select the Runner scheme and an iPhone/simulator, and press **⌘R**. Runner's Run action already uses Debug + LLDB, so Swift breakpoints, variables and crash stacks are available. Rebuild native Swift changes with Xcode; Dart hot reload does not update SwiftUI.
+
+For terminal builds and app logs, use:
+
+```sh
+python3 tools/run_ios_native.py
+# Choose a device explicitly when several are available:
+python3 tools/run_ios_native.py --list
+python3 tools/run_ios_native.py --device DEVICE_ID
+```
+
+The script builds Debug, installs and launches the native app without waiting for a Dart VM Service. It prefers one connected iPhone, or one booted simulator when no phone is connected. Use `--no-console` to return after launching. Build logs are saved in `build/native_ios/build.log`. For Swift breakpoints use Xcode Run or attach Xcode's debugger to Runner; the terminal log command does not attach LLDB.
+
+VS Code: **Terminal → Run Task** exposes the native Debug/logs command and a separate task to open Xcode.
+
+`flutter run` is for the Flutter renderer. Native iOS does not start a FlutterEngine/Dart isolate, so Flutter's Debug runner cannot discover a VM Service and will wait. Package update notices are unrelated. The CLI's `Application finished.` message alone does not identify a native crash; inspect Xcode's process/crash logs.
 
 ## Validation
 
