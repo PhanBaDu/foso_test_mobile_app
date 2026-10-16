@@ -1,37 +1,6 @@
 import SwiftUI
 import Lottie
 
-struct NativeCartView: View {
-    @ObservedObject var viewModel: CartViewModel
-    var body: some View {
-        Group {
-            if viewModel.lines.isEmpty {
-                Color.clear
-            } else {
-                ScrollView(showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 24) {
-                        Text("Giỏ hàng").font(.system(size: 22, weight: .bold, design: .rounded))
-                        ForEach(viewModel.lines) { line in
-                            HStack(spacing: 12) {
-                                ShopImage(name: line.product.image, width: 96, height: 100)
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(line.product.name).font(ShopTheme.font(14, .semibold))
-                                    Text(ShopFormat.money(line.product.price)).font(ShopTheme.font(14, .bold)).foregroundColor(ShopTheme.red)
-                                    HStack(spacing: 20) {
-                                        Button("−") { viewModel.remove(line.id) }.accessibility(label: Text("Giảm số lượng"))
-                                        Text("\(line.quantity)").foregroundColor(ShopTheme.text)
-                                        Button("+") { viewModel.add(line.product) }.accessibility(label: Text("Tăng số lượng"))
-                                    }.font(ShopTheme.font(22)).foregroundColor(ShopTheme.blue)
-                                }
-                            }.padding(12).background(Color.white).cornerRadius(12)
-                        }
-                        Text("Tổng cộng: \(ShopFormat.money(viewModel.total))").font(ShopTheme.font(18, .bold)).accessibility(identifier: "cart-total")
-                    }.padding(16).padding(.bottom, 24)
-                }
-            }
-        }.accessibility(identifier: "native-cart")
-    }
-}
 struct NativeEmptyAnimation: UIViewRepresentable {
     let isPlaying: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

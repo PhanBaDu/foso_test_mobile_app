@@ -94,6 +94,49 @@ final class RunnerTests: XCTestCase {
         for name in names { XCTAssertNotNil(UIImage(named: name), name) }
         XCTAssertNotNil(UIFont(name: "Inter-Regular", size: 14))
     }
+
+    @MainActor
+    func testNativeTypographyKeepsItsDesignSizesWithAccessibilityTextSettings() throws {
+        let repository = ControlledCatalogRepository()
+        let container = NativeAppContainer(repository: repository)
+        let failed = expectation(description: "Bootstrap error is displayed")
+        repository.requests[0](.failure(CatalogError.missingResource))
+        DispatchQueue.main.async {
+            XCTAssertNotNil(container.error)
+            failed.fulfill()
+        }
+        wait(for: [failed], timeout: 3)
+
+        let original = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            .first?.windows.first(where: \.isKeyWindow)
+        defer { original?.makeKeyAndVisible() }
+
+        func render(size: ContentSizeCategory, weight: LegibilityWeight) throws -> Data {
+            // The real bootstrap screen has both an Inter label and a system-font retry button.
+            let view = NativeAppView(container: container)
+                .environment(\.sizeCategory, size)
+                .environment(\.legibilityWeight, weight)
+            let host = NativeHostingController(rootView: view)
+            let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 393, height: 852))
+            window.rootViewController = host
+            window.makeKeyAndVisible()
+            defer { window.isHidden = true }
+            host.view.layoutIfNeeded()
+            RunLoop.main.run(until: Date().addingTimeInterval(0.05))
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1
+            let image = UIGraphicsImageRenderer(bounds: host.view.bounds, format: format).image { _ in
+                host.view.drawHierarchy(in: host.view.bounds, afterScreenUpdates: true)
+            }
+            return try XCTUnwrap(image.pngData())
+        }
+
+        let standard = try render(size: .large, weight: .regular)
+        let accessibility = try render(size: .accessibilityExtraExtraExtraLarge, weight: .bold)
+        XCTAssertTrue(standard == accessibility,
+                      "App typography and layout must remain identical when Dynamic Type and Bold Text change.")
+    }
+
     func testSceneBootsNativeHostingControllerWithoutFlutterRoot() {
         let delegate = UIApplication.shared.connectedScenes.compactMap { $0.delegate as? SceneDelegate }.first
         XCTAssertNotNil(delegate?.window)

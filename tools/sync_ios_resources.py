@@ -28,6 +28,11 @@ for source in sorted((root / 'assets/images').glob('*.png')):
     write(folder / 'Contents.json', json.dumps({'images': entries, 'info': {'author': 'xcode', 'version': 1}}, indent=2).encode())
 write(images / 'Contents.json', b'{"info":{"author":"xcode","version":1}}\n')
 write(resources / 'catalog.json', (root / 'assets/data/catalog.json').read_bytes())
+# The generated font directory mirrors canonical assets; do not retain removed faces.
+font_sources = {font.name for font in (root / 'assets/fonts').iterdir() if font.is_file()}
+for font in (resources / 'fonts').glob('*'):
+    if font.is_file() and font.name not in font_sources:
+        font.unlink()
 for font in (root / 'assets/fonts').iterdir():
     if font.is_file():
         write(resources / 'fonts' / font.name, font.read_bytes())

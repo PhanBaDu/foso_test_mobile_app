@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/catalog_repository.dart';
+import '../core/fixed_typography.dart';
 import '../theme.dart';
 import 'shop_shell.dart';
 
@@ -10,6 +11,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
     title: 'FOSO',
+    builder: (context, child) =>
+        FixedTypography(child: child ?? const SizedBox.shrink()),
     scrollBehavior: const MaterialScrollBehavior().copyWith(scrollbars: false),
     theme: ThemeData(
       useMaterial3: true,

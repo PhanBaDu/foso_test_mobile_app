@@ -24,6 +24,10 @@ enum ShopTheme {
     static let emptyDescriptionFont = Font.system(size: 14, weight: .regular, design: .rounded)
     static func font(_ size: CGFloat, _ weight: Font.Weight = .regular) -> Font {
         let face = weight == .bold ? "Bold" : weight == .semibold ? "SemiBold" : "Regular"
+        // App typography uses design point sizes; the root also fixes iOS 13's environment.
+        if #available(iOS 14.0, *) {
+            return .custom("Inter-\(face)", fixedSize: size)
+        }
         return .custom("Inter-\(face)", size: size)
     }
 }

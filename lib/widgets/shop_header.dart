@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../theme.dart';
 
+/// Keeps the editor mounted while its back-button slot expands or collapses.
 class ShopHeader extends StatelessWidget {
   const ShopHeader({
     super.key,
@@ -35,12 +36,12 @@ class ShopHeader extends StatelessWidget {
                     : const Duration(milliseconds: 280),
                 curve: Curves.easeOutCubic,
                 builder: (context, progress, child) => SizedBox(
-                  width: 44 * progress,
+                  width: 39 * progress,
                   child: ClipRect(
                     child: OverflowBox(
                       alignment: Alignment.centerLeft,
-                      minWidth: 44,
-                      maxWidth: 44,
+                      minWidth: 39,
+                      maxWidth: 39,
                       child: Opacity(
                         opacity: progress.clamp(0, 1),
                         child: Transform.translate(
@@ -55,16 +56,26 @@ class ShopHeader extends StatelessWidget {
                   excluding: onBack == null,
                   child: IgnorePointer(
                     ignoring: onBack == null,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 23),
-                      child: InkWell(
+                    child: Semantics(
+                      label: 'Quay lại',
+                      button: true,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: onBack == null
                             ? null
                             : () {
                                 HapticFeedback.mediumImpact();
                                 onBack!();
                               },
-                        child: const FigmaIcon('arrow-left', size: 21),
+                        child: const Padding(
+                          padding: EdgeInsets.only(right: 18),
+                          child: SizedBox(
+                            height: 38,
+                            child: Center(
+                              child: FigmaIcon('arrow-left', size: 21),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -81,6 +92,8 @@ class ShopHeader extends StatelessWidget {
                     onChanged: onChanged,
                     onSubmitted: onSubmitted,
                     textInputAction: TextInputAction.search,
+                    textCapitalization: TextCapitalization.none,
+                    autocorrect: false,
                     style: const TextStyle(fontSize: 15),
                     decoration: InputDecoration(
                       hintText: 'Tìm kiếm sản phẩm',
@@ -103,19 +116,16 @@ class ShopHeader extends StatelessWidget {
                       suffixIcon: IconButton(
                         tooltip: 'Tìm kiếm bằng hình ảnh',
                         padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints.tightFor(
+                          width: 32,
+                          height: 38,
+                        ),
                         icon: const FigmaIcon(
                           'camera',
                           size: 20,
                           color: AppColors.blue,
                         ),
-                        onPressed: () =>
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Tìm kiếm bằng hình ảnh sẽ sớm được cập nhật.',
-                                ),
-                              ),
-                            ),
+                        onPressed: null,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),

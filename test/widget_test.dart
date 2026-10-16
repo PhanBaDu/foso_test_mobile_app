@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foso_test_mobile_app/main.dart';
 import 'package:foso_test_mobile_app/widgets/empty_animation.dart';
+import 'package:foso_test_mobile_app/widgets/category/category_results.dart';
 import 'package:foso_test_mobile_app/widgets/flash_countdown.dart';
 
 class TestCatalogRepository implements CatalogRepository {
@@ -101,7 +102,13 @@ void main() {
     expect(find.text('Sub Category 1'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('category-2')));
     await tester.pumpAndSettle();
-    expect(find.text('Bộ Lọc Nhiên Liệu'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(CategoryResults),
+        matching: find.text('Bộ Lọc Nhiên Liệu'),
+      ),
+      findsOneWidget,
+    );
     await tester.enterText(find.byType(TextField), 'không tồn tại');
     await tester.pumpAndSettle();
     expect(find.text('Không tìm thấy sản phẩm'), findsOneWidget);

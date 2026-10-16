@@ -28,11 +28,15 @@ class HomeViewModel extends ChangeNotifier {
         0,
         catalog.flashSaleDurationSeconds,
       );
-  List<String> get clock => [
-    remainingSeconds ~/ 3600,
-    remainingSeconds % 3600 ~/ 60,
-    remainingSeconds % 60,
-  ].map((value) => value.toString().padLeft(2, '0')).toList(growable: false);
+  List<String> get clock {
+    final seconds = remainingSeconds;
+    return [
+      seconds ~/ 3600,
+      seconds % 3600 ~/ 60,
+      seconds % 60,
+    ].map((value) => value.toString().padLeft(2, '0')).toList(growable: false);
+  }
+
   void selectBanner(int value) {
     if (value < 0 || value > 2 || value == _banner) return;
     _banner = value;

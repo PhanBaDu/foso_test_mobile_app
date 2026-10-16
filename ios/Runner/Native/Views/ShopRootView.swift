@@ -12,7 +12,12 @@ struct NativeAppView: View {
                     if container.error != nil { Button("Thử lại", action: container.reload) }
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-        }.environment(\.colorScheme, .light).foregroundColor(ShopTheme.text)
+        }
+        .environment(\.colorScheme, .light)
+        // Preserve the default layout independently of Dynamic Type and Bold Text.
+        .environment(\.sizeCategory, .large)
+        .environment(\.legibilityWeight, .regular)
+        .foregroundColor(ShopTheme.text)
     }
 }
 struct NativeShopRootView: View {

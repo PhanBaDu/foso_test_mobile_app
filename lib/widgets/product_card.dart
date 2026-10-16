@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+
+import '../core/formatters.dart';
 import '../models/catalog.dart';
 import '../theme.dart';
 import 'sales_progress.dart';
-import '../core/formatters.dart';
 
+/// Shared native-sized card; buying is the only interactive action.
 class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
@@ -12,6 +14,7 @@ class ProductCard extends StatelessWidget {
     this.flash = false,
     this.limited = false,
   });
+
   final VoidCallback onBuy;
   final Product product;
   final bool flash;
@@ -20,6 +23,11 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     width: 148,
+    height: flash
+        ? 340
+        : limited
+        ? 320
+        : 290,
     padding: const EdgeInsets.all(12),
     decoration: BoxDecoration(
       color: Colors.white,
@@ -28,12 +36,7 @@ class ProductCard extends StatelessWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: InkWell(
-            onTap: null,
-            child: Center(child: assetImage(product.image, width: 124)),
-          ),
-        ),
+        Expanded(child: Center(child: assetImage(product.image, width: 124))),
         const SizedBox(height: 12),
         if (limited)
           Container(
@@ -59,26 +62,24 @@ class ProductCard extends StatelessWidget {
               ],
             ),
           ),
-        InkWell(
-          onTap: null,
-          child: SizedBox(
-            height: 40,
-            child: Text(
-              product.name,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 15,
-                height: 1.3,
-                fontWeight: FontWeight.w600,
-              ),
+        SizedBox(
+          height: 40,
+          child: Text(
+            product.name,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 15,
+              height: 1.3,
+              fontWeight: FontWeight.w600,
+              color: AppColors.text,
             ),
           ),
         ),
         const SizedBox(height: 12),
         Text(
           '${formatMoney(product.price)} đ',
-          style: TextStyle(
+          style: const TextStyle(
             color: Color(0xFFCF1717),
             fontSize: 16,
             fontWeight: FontWeight.w700,
@@ -89,16 +90,16 @@ class ProductCard extends StatelessWidget {
           children: [
             Text(
               '${formatMoney(product.originalPrice)} đ',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 11,
                 color: AppColors.muted,
                 decoration: TextDecoration.lineThrough,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               '-${product.discountPercent}%',
-              style: TextStyle(fontSize: 11, color: AppColors.red),
+              style: const TextStyle(fontSize: 11, color: AppColors.red),
             ),
           ],
         ),
@@ -108,7 +109,7 @@ class ProductCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             'Đã bán ${product.soldCount} sản phẩm',
-            style: TextStyle(fontSize: 11, color: Color(0xFF454F5B)),
+            style: const TextStyle(fontSize: 11, color: Color(0xFF454F5B)),
           ),
         ],
         const SizedBox(height: 12),
@@ -124,7 +125,7 @@ class ProductCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
-            child: Text(
+            child: const Text(
               'Mua ngay',
               style: TextStyle(
                 fontSize: 12,

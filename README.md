@@ -62,8 +62,18 @@ xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Debug
 
 `CAPTURE_PREVIEWS=1 flutter test` writes 3× Flutter previews under `build/previews/`. Native XCTest attaches Home/Category renders to its result bundle. System status-bar content is provided by iOS, not drawn into widget snapshots.
 
+## Presentation components
+
+Android uses the native iOS layout as its reference, in logical pixels matching iOS points: 60-point tab content, 24-point top tab corners, 12-point section gaps, and the same catalog/image assets. Platform status bars, keyboards, haptic hardware and system-rounded iOS text remain platform-specific. Inter is the only bundled font family. App typography stays at its designed sizes and weights: Flutter fixes text scaling/Bold Text at the app boundary, and iOS fixes Dynamic Type/legibility at the native root. Other insets and accessibility preferences continue to update normally.
+
+- `lib/screens/home_screen.dart` composes sections. `widgets/home/` owns the carousel timer and featured-list scroll progress; countdown notifications rebuild only the relevant animated components.
+- `lib/screens/category_screen.dart` binds the ViewModel to `widgets/category/`. The sidebar owns its moving concave highlight; results use the available pane width for compact layout.
+- `widgets/navigation_bar.dart` owns marker movement, glow, icon fades, haptics and cart badge digits. Marker ticks repaint a separate surface without relaying out the tab content.
+- `widgets/section_heading.dart`, `see_all_button.dart`, `article_list.dart`, `product_card.dart` and `rolling_number.dart` are shared presentation components. `catalog_components.dart` preserves their existing imports.
+- `lib/app/shop_content.dart` composes retained tabs through `widgets/retained_tab.dart`. The shell retains tab instances, fades between them and mounts one Lottie instance for Cart/Account. Search remembers its originating tab; choosing Category directly has no back arrow. The keyboard overlays the navigation and can be dismissed outside the field or with the dismiss button.
+
 ## Current scope
 
-Home, categories/search, product previews, cart quantities/totals, news/article previews and an account placeholder. Catalog data is bundled and carts are in memory. No backend, authentication, payment or image-search service is connected. Figma was only read/exported; no design edits or comments were posted.
+Home, categories/search, news and shared Cart/Account placeholders are active. Buying updates the in-memory cart badge and shows a toast with a Cart action. Product/article/notification sheets are removed. Catalog data is bundled. No backend, authentication, payment or image-search service is connected.
 
-Local validation: Flutter analyzer/tests and Web build; native iOS simulator build and XCTest. Android APK build requires the Android SDK, which is not installed on this machine.
+Android APK/device validation requires an Android SDK; set `ANDROID_HOME` or local `sdk.dir` before running `flutter build apk --debug`. `android/local.properties` is machine-local and ignored. Flutter widget tests exercise the UI and flow independently of the SDK.

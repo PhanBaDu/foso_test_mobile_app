@@ -35,6 +35,7 @@ class SharedEmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // The shell retains this keyed instance when Cart and Account alternate.
           EmptyAnimation(
             key: const ValueKey('shared-empty-animation'),
             active: active,
