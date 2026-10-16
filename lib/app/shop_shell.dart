@@ -45,14 +45,28 @@ class _ShopShellState extends State<ShopShell> {
   void _buy(Product product) {
     _vm.cart.add(product.id);
     // Snackbars and navigation are presentation effects, not ViewModel duties.
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(12),
+        backgroundColor: AppColors.blue,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         content: const Text('Đã thêm sản phẩm vào giỏ hàng'),
         action: SnackBarAction(
           label: 'Xem giỏ',
+          textColor: Colors.white,
           onPressed: () => _selectTab(1),
         ),
+      ),
+      snackBarAnimationStyle: AnimationStyle(
+        duration: MediaQuery.disableAnimationsOf(context)
+            ? Duration.zero
+            : const Duration(milliseconds: 240),
+        reverseDuration: MediaQuery.disableAnimationsOf(context)
+            ? Duration.zero
+            : const Duration(milliseconds: 200),
       ),
     );
   }
@@ -79,6 +93,9 @@ class _ShopShellState extends State<ShopShell> {
           ),
         );
       }
+      final showEmpty =
+          _vm.tab == ShopTab.account ||
+          (_vm.tab == ShopTab.cart && _vm.cart.lines.isEmpty);
       final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
       return Stack(
         children: [
@@ -110,59 +127,53 @@ class _ShopShellState extends State<ShopShell> {
                     ),
                     child: ColoredBox(
                       color: AppColors.background,
-                      child: IndexedStack(
-                        index: _vm.tab.index,
+                      child: Stack(
+                        fit: StackFit.expand,
                         children: [
-                          HomeScreen(
-                            viewModel: _vm.home,
-                            onCategory: _vm.openCategory,
-                            onBuy: _buy,
-                            onNews: () => _selectTab(3),
+                          IndexedStack(
+                            index: _vm.tab.index,
+                            children: [
+                              HomeScreen(
+                                viewModel: _vm.home,
+                                active: _vm.tab == ShopTab.home,
+                                onCategory: _vm.openCategory,
+                                onBuy: _buy,
+                                onNews: () => _selectTab(3),
+                              ),
+                              CartScreen(viewModel: _vm.cart),
+                              CategoryScreen(
+                                viewModel: _vm.categories,
+                                onBuy: _buy,
+                              ),
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    const SectionHeading(
+                                      title: 'Bài Viết Nổi Bật',
+                                      icon: 'tab_news',
+                                      iconColor: AppColors.blue,
+                                      gap: 12,
+                                      padding: EdgeInsets.all(12),
+                                    ),
+                                    ArticleList(
+                                      gap: 12,
+                                      cardPadding: 6,
+                                      textGap: 12,
+                                      articles: _vm.home.catalog.articles,
+                                      onArticle: (article) =>
+                                          openArticle(context, article),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox.shrink(),
+                            ],
                           ),
-                          CartScreen(
-                            viewModel: _vm.cart,
-                            active: _vm.tab == ShopTab.cart,
-                          ),
-                          CategoryScreen(
-                            viewModel: _vm.categories,
-                            onBuy: _buy,
-                          ),
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                const SectionHeading(
-                                  title: 'Bài Viết Nổi Bật',
-                                  icon: 'article',
-                                ),
-                                ArticleList(
-                                  articles: _vm.home.catalog.articles,
-                                  onArticle: (article) =>
-                                      openArticle(context, article),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                EmptyAnimation(
-                                  active: _vm.tab == ShopTab.account,
-                                ),
-                                SizedBox(height: 16),
-                                Text(
-                                  'Tài khoản',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Chào mừng bạn đến với FOSO',
-                                  style: TextStyle(color: AppColors.muted),
-                                ),
-                              ],
+                          Offstage(
+                            offstage: !showEmpty,
+                            child: SharedEmptyState(
+                              active: showEmpty,
+                              isCart: _vm.tab == ShopTab.cart,
                             ),
                           ),
                         ],

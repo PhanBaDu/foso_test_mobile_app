@@ -26,28 +26,35 @@ struct FigmaIcon: View {
 }
 struct SeeAllButton: View {
     var color: Color = ShopTheme.blue
+    var fontSize: CGFloat = 12
     let action: () -> Void
     var body: some View {
         Button(action: action) {
             HStack(spacing: 3) {
-                Text("Xem tất cả").font(ShopTheme.font(9))
-                FigmaIcon(name: "chevrons", size: 12, color: color)
+                Text("Xem tất cả").font(ShopTheme.font(fontSize)).lineLimit(1).fixedSize()
+                FigmaIcon(name: "chevrons", size: 12, color: color).offset(y: 1)
             }.foregroundColor(color).padding(.vertical, 4)
         }.buttonStyle(PlainButtonStyle())
     }
 }
 struct SectionHeader: View {
+    var spacing: CGFloat? = nil
     let title: String
-    let icon: String
+    var icon: String? = nil
+    var iconColor: Color? = nil
+    var color: Color? = nil
     var light = false
+    var accessory: AnyView? = nil
+    var actionColor: Color? = nil
     var action: (() -> Void)? = nil
     var body: some View {
-        HStack(spacing: 9) {
-            FigmaIcon(name: icon)
-            Text(title).font(ShopTheme.font(16, .semibold)).foregroundColor(light ? .white : ShopTheme.text)
+        HStack(spacing: spacing ?? 9) {
+            if let icon = icon { FigmaIcon(name: icon, color: iconColor) }
+            Text(title).font(ShopTheme.font(16, .semibold)).foregroundColor(color ?? (light ? .white : ShopTheme.text)).lineLimit(1).minimumScaleFactor(0.7).frame(minHeight: 24)
+            if let accessory = accessory { accessory }
             Spacer(minLength: 4)
-            if let action = action { SeeAllButton(color: light ? .white : ShopTheme.blue, action: action) }
-        }.padding(.horizontal, 12).padding(.top, 24).padding(.bottom, 16)
+            if let action = action { SeeAllButton(color: actionColor ?? (light ? .white : ShopTheme.blue), action: action) }
+        }.padding(.horizontal, 12).padding(.top, spacing ?? 24).padding(.bottom, spacing ?? 16)
     }
 }
 struct TopRoundedShape: Shape {
@@ -279,49 +286,114 @@ struct NativeProductCard: View {
     let onDetails: () -> Void
     let onBuy: () -> Void
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 12) {
             Button(action: onDetails) { ShopImage(name: product.image).frame(maxWidth: .infinity, maxHeight: .infinity) }.buttonStyle(PlainButtonStyle())
             if limited {
-                HStack(spacing: 2) { FigmaIcon(name: "fire", size: 10); Text("Chỉ còn 1 sản phẩm").font(ShopTheme.font(8, .semibold)) }
-                    .padding(3).background(Color(hex: 0xFFB200)).cornerRadius(10).padding(.bottom, 12)
+                HStack(spacing: 3) {
+                    FigmaIcon(name: "flashsale", size: 12)
+                    Text("Chỉ còn 1 sản phẩm").font(ShopTheme.font(10, .semibold))
+                        .foregroundColor(ShopTheme.limitedStockText).lineLimit(1)
+                }
+                .padding(.horizontal, 4).padding(.vertical, 3)
+                .background(Color(hex: 0xFFB200)).clipShape(Capsule())
             }
-            Button(action: onDetails) { Text(product.name).font(ShopTheme.font(14, .semibold)).lineLimit(2).multilineTextAlignment(.leading).frame(height: 38, alignment: .topLeading) }.buttonStyle(PlainButtonStyle()).foregroundColor(ShopTheme.text)
-            Text(ShopFormat.money(product.price)).font(ShopTheme.font(14, .bold)).foregroundColor(Color(hex: 0xCF1717)).padding(.top, 12)
-            HStack(spacing: 10) {
-                Text(ShopFormat.money(product.originalPrice)).strikethrough().foregroundColor(ShopTheme.muted)
-                Text("-\(product.discountPercent)%").foregroundColor(ShopTheme.red)
-            }.font(ShopTheme.font(10)).padding(.top, 10)
+            Button(action: onDetails) { Text(product.name).font(ShopTheme.font(15, .semibold)).lineLimit(2).truncationMode(.tail).multilineTextAlignment(.leading).frame(height: 40, alignment: .topLeading) }.buttonStyle(PlainButtonStyle()).foregroundColor(ShopTheme.text)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(ShopFormat.money(product.price)).font(ShopTheme.font(16, .bold)).foregroundColor(Color(hex: 0xCF1717))
+                HStack(spacing: 12) {
+                    Text(ShopFormat.money(product.originalPrice)).strikethrough().foregroundColor(ShopTheme.muted)
+                    Text("-\(product.discountPercent)%").foregroundColor(ShopTheme.red)
+                }.font(ShopTheme.font(11))
+            }
             if flash {
-                ZStack(alignment: .leading) {
-                    Capsule().fill(Color(hex: 0xF5D5D4)).frame(height: 6)
-                    Capsule().fill(Color(hex: 0xFF653D)).frame(width: 83, height: 6)
-                    FigmaIcon(name: "fire", size: 18).offset(x: 72)
-                }.padding(.top, 15)
-                Text("Đã bán \(product.soldCount) sản phẩm").font(ShopTheme.font(10)).foregroundColor(Color(hex: 0x454F5B)).padding(.top, 6)
+                SalesProgress(value: 0.63)
+                Text("Đã bán \(product.soldCount) sản phẩm").font(ShopTheme.font(11)).foregroundColor(Color(hex: 0x454F5B))
             }
             Button(action: onBuy) {
-                Text("Mua ngay").font(ShopTheme.font(11, .bold)).foregroundColor(ShopTheme.blue).frame(maxWidth: .infinity).frame(height: 26).background(ShopTheme.paleBlue).cornerRadius(4)
-            }.buttonStyle(PlainButtonStyle()).padding(.top, 12).accessibility(identifier: "buy-\(product.id)")
-        }.padding(8).frame(width: 148, height: flash ? 340 : limited ? 320 : 290).background(Color.white).cornerRadius(12)
+                Text("Mua ngay").font(ShopTheme.font(12, .bold)).foregroundColor(ShopTheme.blue).frame(maxWidth: .infinity).frame(height: 30).background(ShopTheme.paleBlue).cornerRadius(4)
+            }.buttonStyle(PlainButtonStyle()).accessibility(identifier: "buy-\(product.id)")
+        }.padding(12).frame(width: 148, height: flash ? 340 : limited ? 320 : 290).background(Color.white).cornerRadius(12)
     }
 }
 struct NativeArticleList: View {
     let articles: [Article]
     let onSelect: (Article) -> Void
+    var gap: CGFloat = 16
+    var cardPadding: CGFloat = 6
+    var textGap: CGFloat = 8
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: gap) {
             ForEach(articles) { article in
                 Button(action: { onSelect(article) }) {
-                    HStack(spacing: 16) {
-                        ShopImage(name: article.image, width: 120, height: 81, fit: .fill).cornerRadius(8)
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(article.title).font(ShopTheme.font(14, .semibold)).lineLimit(2).foregroundColor(ShopTheme.text)
+                    HStack(spacing: gap) {
+                        ShopImage(name: article.image, width: 120, height: 96, fit: .fill).cornerRadius(12)
+                        VStack(alignment: .leading, spacing: textGap) {
+                            Text(article.title).font(ShopTheme.font(14, .semibold)).lineLimit(3).truncationMode(.tail).foregroundColor(ShopTheme.text)
                             Spacer(minLength: 0)
                             Text(ShopFormat.date(article.date)).font(ShopTheme.font(12)).foregroundColor(ShopTheme.blue)
-                        }.frame(maxWidth: .infinity, alignment: .leading).frame(height: 81)
-                    }.padding(4).background(Color.white).cornerRadius(12)
+                        }.frame(maxWidth: .infinity, alignment: .leading).frame(height: 96)
+                    }.padding(cardPadding).background(Color.white).cornerRadius(16)
                 }.buttonStyle(PlainButtonStyle())
             }
         }.padding(.horizontal, 12)
+    }
+}
+
+struct FlashCountdown: View {
+    let values: [String]
+    var body: some View {
+        HStack(spacing: 3) {
+            ForEach(0..<values.count, id: \.self) { index in
+                if index > 0 { Text(":").font(ShopTheme.font(13, .semibold)).foregroundColor(ShopTheme.red) }
+                CountdownTile(value: values[index])
+            }
+        }.fixedSize()
+    }
+}
+
+private struct CountdownTile: View {
+    let value: String
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 5).fill(ShopTheme.red)
+            HStack(spacing: 0) {
+                ForEach(Array(value).indices, id: \.self) { index in
+                    ZStack {
+                        Text(String(Array(value)[index]))
+                            .font(.system(size: 13, weight: .semibold, design: .monospaced))
+                            .foregroundColor(.white).id(Array(value)[index])
+                            .transition(.asymmetric(
+                                insertion: .offset(y: -12).combined(with: .opacity),
+                                removal: .offset(y: 12).combined(with: .opacity)))
+                    }
+                    .frame(width: 8, height: 18).clipped()
+                    .animation(reduceMotion ? nil : .easeOut(duration: 0.22))
+                }
+            }
+            RoundedRectangle(cornerRadius: 5).stroke(
+                LinearGradient(gradient: Gradient(colors: [.white.opacity(0.9), .white.opacity(0.12)]),
+                               startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1.5)
+        }.frame(width: 26, height: 26)
+            .accessibilityElement(children: .ignore).accessibility(label: Text(value))
+    }
+}
+
+struct SalesProgress: View {
+    var value: CGFloat = 0.63
+    var body: some View {
+        GeometryReader { geometry in
+            let progress = min(1, max(0, value))
+            ZStack(alignment: .leading) {
+                Capsule().fill(ShopTheme.salesProgressTrack).frame(height: 6)
+                Capsule().fill(LinearGradient(
+                    gradient: Gradient(colors: [ShopTheme.salesProgressStart, ShopTheme.salesProgressEnd]),
+                    startPoint: .leading, endPoint: .trailing))
+                    .frame(width: geometry.size.width * progress, height: 6)
+                FigmaIcon(name: "flashsale", size: 22)
+                    .zIndex(1)
+                    .offset(x: min(max(0, geometry.size.width - 22), max(0, geometry.size.width * progress - 11)))
+            }.frame(height: 22)
+        }.frame(height: 22).accessibility(hidden: true)
     }
 }

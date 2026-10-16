@@ -7,104 +7,159 @@ class SectionHeading extends StatelessWidget {
   const SectionHeading({
     super.key,
     required this.title,
-    required this.icon,
+    this.icon,
     this.onSeeAll,
     this.light = false,
+    this.iconColor,
+    this.color,
+    this.accessory,
+    this.actionColor,
+    this.gap = 9,
+    this.padding = const EdgeInsets.fromLTRB(12, 24, 12, 16),
   });
   final String title;
-  final String icon;
+  final String? icon;
   final VoidCallback? onSeeAll;
   final bool light;
+  final Color? iconColor;
+  final Color? color, actionColor;
+  final Widget? accessory;
+  final double gap;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(12, 24, 12, 16),
+    padding: padding,
     child: Row(
       children: [
-        FigmaIcon(icon, size: 24),
-        const SizedBox(width: 9),
+        if (icon != null) ...[
+          FigmaIcon(icon!, size: 24, color: iconColor),
+          SizedBox(width: gap),
+        ],
         Expanded(
           child: Text(
             title,
+            strutStyle: const StrutStyle(
+              fontSize: 16,
+              height: 1.5,
+              forceStrutHeight: true,
+            ),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: light ? Colors.white : const Color(0xFF454F5B),
+              color: color ?? (light ? Colors.white : AppColors.text),
             ),
           ),
         ),
-        if (onSeeAll != null)
-          seeAll(onSeeAll!, color: light ? Colors.white : AppColors.blue),
+        if (accessory != null) ...[SizedBox(width: gap), accessory!],
+        if (onSeeAll != null) ...[
+          if (accessory != null) SizedBox(width: gap),
+          seeAll(
+            onSeeAll!,
+            color: actionColor ?? (light ? Colors.white : AppColors.blue),
+          ),
+        ],
       ],
     ),
   );
 }
 
-Widget seeAll(VoidCallback onTap, {Color color = AppColors.blue}) => InkWell(
-  onTap: onTap,
-  child: Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text('Xem tất cả', style: TextStyle(fontSize: 8, color: color)),
-        FigmaIcon('chevrons', size: 12, color: color),
-      ],
+class SeeAllButton extends StatelessWidget {
+  const SeeAllButton({
+    super.key,
+    required this.onTap,
+    this.color = AppColors.blue,
+    this.fontSize = 12,
+  });
+  final VoidCallback onTap;
+  final Color color;
+  final double fontSize;
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    onTap: onTap,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Xem tất cả',
+            style: TextStyle(fontSize: fontSize, color: color),
+          ),
+          const SizedBox(width: 3),
+          Transform.translate(
+            offset: const Offset(0, 1),
+            child: FigmaIcon('chevrons', size: 12, color: color),
+          ),
+        ],
+      ),
     ),
-  ),
-);
+  );
+}
+
+Widget seeAll(
+  VoidCallback onTap, {
+  Color color = AppColors.blue,
+  double fontSize = 12,
+}) => SeeAllButton(onTap: onTap, color: color, fontSize: fontSize);
 
 class ArticleList extends StatelessWidget {
   const ArticleList({
     super.key,
     required this.onArticle,
     required this.articles,
+    this.gap = 16,
+    this.cardPadding = 6,
+    this.textGap = 0,
   });
   final ValueChanged<Article> onArticle;
   final List<Article> articles;
+  final double gap, cardPadding, textGap;
   @override
   Widget build(BuildContext context) => Column(
     children: List.generate(
       3,
       (i) => Padding(
-        padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+        padding: EdgeInsets.fromLTRB(12, 0, 12, gap),
         child: Material(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           child: InkWell(
             onTap: () => onArticle(articles[i]),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             child: Padding(
-              padding: const EdgeInsets.all(4),
+              padding: EdgeInsets.all(cardPadding),
               child: Row(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(12),
                     child: assetImage(
                       articles[i].image,
                       width: 120,
-                      height: 81,
+                      height: 96,
                       fit: BoxFit.cover,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: gap),
                   Expanded(
                     child: SizedBox(
-                      height: 81,
+                      height: 96,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             articles[i].title,
-                            maxLines: 2,
+                            maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 15,
-                              height: 1.6,
+                              height: 1.4,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           Spacer(),
+                          SizedBox(height: textGap),
                           Text(
                             formatDate(articles[i].date),
                             style: TextStyle(

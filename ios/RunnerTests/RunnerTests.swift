@@ -62,6 +62,25 @@ final class RunnerTests: XCTestCase {
         XCTAssertNil(vm.returnTab)
     }
 
+    @MainActor
+    func testFeaturedScrollReportsRealProgressAndKeepsItemsMounted() throws {
+        let scroll = FeaturedCategoriesScrollView(frame: CGRect(x: 0, y: 0, width: 393, height: 98))
+        var progress: CGFloat = 0
+        let categories = try catalog().featuredCategories
+        scroll.configure(categories: categories, onCategory: { _ in }, onProgress: { progress = $0 })
+        scroll.layoutIfNeeded()
+        let extent = scroll.contentSize.width - scroll.bounds.width
+        XCTAssertGreaterThan(extent, 0)
+        scroll.setContentOffset(CGPoint(x: extent / 2, y: 0), animated: false)
+        XCTAssertEqual(progress, 0.5, accuracy: 0.001)
+        scroll.setContentOffset(CGPoint(x: extent, y: 0), animated: false)
+        XCTAssertEqual(progress, 1, accuracy: 0.001)
+        scroll.configure(categories: categories, onCategory: { _ in }, onProgress: { progress = $0 })
+        XCTAssertEqual(scroll.contentOffset.x, extent, accuracy: 0.001)
+        scroll.setContentOffset(.zero, animated: false)
+        XCTAssertEqual(progress, 0, accuracy: 0.001)
+    }
+
     func testCatalogRejectsBrokenReferences() throws {
         let catalog = try catalog()
         let invalid = CatalogData(categories: catalog.categories, featuredCategoryIds: ["missing"], filters: catalog.filters, products: catalog.products, articles: catalog.articles, flashSaleDurationSeconds: 0)

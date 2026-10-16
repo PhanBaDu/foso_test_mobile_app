@@ -8,6 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foso_test_mobile_app/main.dart';
+import 'package:foso_test_mobile_app/widgets/flash_countdown.dart';
 
 class TestCatalogRepository implements CatalogRepository {
   @override
@@ -49,6 +50,46 @@ void main() {
     }
     await loader.load();
   });
+  testWidgets('Countdown rolls only the digit that changes', (tester) async {
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: false);
+    Widget clock(String seconds) => MaterialApp(
+      home: Center(child: FlashCountdown(values: ['19', '24', seconds])),
+    );
+    await tester.pumpWidget(clock('32'));
+    final seconds = find.byKey(const ValueKey('countdown-unit-2'));
+    final unchangedDigit = tester.element(
+      find.descendant(of: seconds, matching: find.text('3')),
+    );
+    await tester.pumpWidget(clock('31'));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(
+      identical(
+        tester.element(find.descendant(of: seconds, matching: find.text('3'))),
+        unchangedDigit,
+      ),
+      isTrue,
+    );
+    expect(
+      find.descendant(of: seconds, matching: find.text('2')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: seconds, matching: find.text('1')),
+      findsOneWidget,
+    );
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(
+      find.descendant(of: seconds, matching: find.text('2')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: seconds, matching: find.text('1')),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Home, category selection and search work together', (
     tester,
   ) async {
@@ -89,6 +130,126 @@ void main() {
     await tester.tap(find.byTooltip('Đóng bàn phím'));
     await tester.pump();
     expect(editor.focusNode.hasFocus, isFalse);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'Featured category progress tracks horizontal scroll to both ends',
+    (tester) async {
+      await pumpShop(tester);
+      final list = find.byKey(const ValueKey('featured-categories'));
+      final controller = tester.widget<ListView>(list).controller!;
+      final thumb = find.byKey(const ValueKey('featured-progress-thumb'));
+      final start = tester.getTopLeft(thumb).dx;
+      final viewport = controller.position.viewportDimension;
+      const contentWidth = 10 * 77 + 9 * 6 + 24;
+      final extent = contentWidth - viewport;
+      expect(tester.getSize(thumb).width, 24);
+      await tester.drag(list, const Offset(-160, 0));
+      await tester.pumpAndSettle();
+      expect(tester.getTopLeft(thumb).dx, greaterThan(start));
+      expect(tester.getSize(thumb).width, 24);
+      controller.jumpTo(extent / 2);
+      await tester.pumpAndSettle();
+      expect(tester.getTopLeft(thumb).dx, closeTo(start + 17.5, 0.1));
+      expect(tester.getSize(thumb).width, 24);
+      controller.jumpTo(controller.position.maxScrollExtent);
+      await tester.pumpAndSettle();
+      expect(tester.getTopLeft(thumb).dx, closeTo(start + 35, 0.1));
+      expect(tester.getSize(thumb).width, 24);
+      controller.jumpTo(0);
+      await tester.pump();
+      expect(tester.getTopLeft(thumb).dx, closeTo(start, 0.1));
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('Offer carousel supports manual swipes in both directions', (
+    tester,
+  ) async {
+    await pumpShop(tester);
+    final pager = find.byType(PageView);
+    await tester.ensureVisible(pager);
+    await tester.pumpAndSettle();
+    final controller = tester.widget<PageView>(pager).controller!;
+    expect(controller.page, 1);
+    await tester.drag(pager, const Offset(-300, 0));
+    await tester.pumpAndSettle();
+    expect(controller.page, closeTo(2, 0.01));
+    await tester.drag(pager, const Offset(300, 0));
+    await tester.pumpAndSettle();
+    expect(controller.page, closeTo(1, 0.01));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Touching and dragging a slide resets the autoplay countdown', (
+    tester,
+  ) async {
+    await pumpShop(tester);
+    final pager = find.byType(PageView);
+    await tester.ensureVisible(pager);
+    await tester.pumpAndSettle();
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: false);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump(const Duration(seconds: 3));
+    final controller = tester.widget<PageView>(pager).controller!;
+    final gesture = await tester.startGesture(tester.getCenter(pager));
+    await tester.pump(const Duration(seconds: 2));
+    expect(controller.page, closeTo(1, 0.01));
+    await gesture.moveBy(const Offset(-20, 0));
+    await tester.pump(const Duration(milliseconds: 16));
+    await gesture.moveBy(const Offset(-280, 0));
+    await tester.pump(const Duration(milliseconds: 16));
+    await gesture.up();
+    await tester.pumpAndSettle();
+    expect(controller.page, closeTo(2, 0.01));
+    await tester.pump(const Duration(milliseconds: 3500));
+    expect(controller.page, closeTo(2, 0.01));
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(controller.page, closeTo(0, 0.01));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Offer slides autoplay and pause when Home is hidden', (
+    tester,
+  ) async {
+    await pumpShop(tester);
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: false);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    final pager = tester.widget<PageView>(find.byType(PageView));
+    expect(pager.controller!.page, 1);
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(pager.controller!.page, closeTo(2, 0.01));
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: true);
+    await tester.tap(find.byKey(const ValueKey('tab-4')));
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 4));
+    expect(pager.controller!.page, closeTo(2, 0.01));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Cart and account retain one shared animation element', (
+    tester,
+  ) async {
+    await pumpShop(tester);
+    await tester.tap(find.byKey(const ValueKey('tab-1')));
+    await tester.pumpAndSettle();
+    final animation = find.byKey(const ValueKey('shared-empty-animation'));
+    final original = tester.element(animation);
+    expect(find.text('Giỏ hàng của bạn đang trống'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('tab-4')));
+    await tester.pumpAndSettle();
+    expect(identical(tester.element(animation), original), isTrue);
+    expect(find.text('Chào mừng bạn đến với FOSO'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('tab-1')));
+    await tester.pumpAndSettle();
+    expect(identical(tester.element(animation), original), isTrue);
     expect(tester.takeException(), isNull);
   });
 

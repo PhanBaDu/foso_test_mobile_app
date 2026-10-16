@@ -61,5 +61,9 @@ final class ShopViewModel: ObservableObject {
         toastDismissal = work
         DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: work)
     }
+    func dismissToast() {
+        toastDismissal?.cancel()
+        toast = nil
+    }
     deinit { toastDismissal?.cancel() }
 }

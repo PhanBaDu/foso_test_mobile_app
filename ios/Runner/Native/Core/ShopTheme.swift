@@ -2,6 +2,7 @@ import SwiftUI
 
 // Keep asset names identical to Flutter. Xcode resolves the 1×/3× image-set variants.
 enum ShopTheme {
+    static let featuredCategoryTitle = Color(hex: 0x013065)
     static let blue = Color(hex: 0x025FCA)
     static let tabIndicatorUIColor = UIColor(red: 2.0 / 255, green: 95.0 / 255, blue: 202.0 / 255, alpha: 1)
     static let tabGlowUIColor = UIColor(red: 3.0 / 255, green: 122.0 / 255, blue: 1, alpha: 0.10)
@@ -12,7 +13,12 @@ enum ShopTheme {
     static let paleBlue = Color(hex: 0xE6F1FF)
     static let text = Color(hex: 0x1C252E)
     static let muted = Color(hex: 0x919EAB)
+    static let salesProgressStart = Color(hex: 0xFF5630)
+    static let salesProgressEnd = Color(hex: 0xB71D18)
+    static let salesProgressTrack = Color(hex: 0xF5D5D4)
+    static let salesProgressBadge = Color(hex: 0xFFF3D9)
     static let flash = Color(hex: 0xFF6948)
+    static let limitedStockText = Color(hex: 0x7A0916)
     static let red = Color(hex: 0xEF382F)
     static let emptyTitleFont = Font.system(size: 18, weight: .semibold, design: .rounded)
     static let emptyDescriptionFont = Font.system(size: 14, weight: .regular, design: .rounded)

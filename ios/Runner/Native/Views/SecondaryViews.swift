@@ -3,15 +3,10 @@ import Lottie
 
 struct NativeCartView: View {
     @ObservedObject var viewModel: CartViewModel
-    var isActive = true
     var body: some View {
         Group {
             if viewModel.lines.isEmpty {
-                NativeEmptyState(
-                    title: "Giỏ hàng của bạn đang trống",
-                    description: "Khám phá sản phẩm tại Trang chủ",
-                    isPlaying: isActive
-                )
+                Color.clear
             } else {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 24) {
@@ -106,21 +101,26 @@ struct NativeEmptyAnimation: UIViewRepresentable {
 
 // Shared geometry keeps the illustration and text baselines aligned across tabs.
 struct NativeEmptyState: View {
-    let title: String
-    let description: String
+    let isCart: Bool
     let isPlaying: Bool
 
     var body: some View {
         VStack(spacing: 0) {
             NativeEmptyAnimation(isPlaying: isPlaying)
                 .frame(maxWidth: 280).frame(height: 190)
-            Text(title)
+            ZStack {
+                Text("Giỏ hàng của bạn đang trống").opacity(isCart ? 1 : 0)
+                Text("Tài khoản").opacity(isCart ? 0 : 1)
+            }
                 .font(ShopTheme.emptyTitleFont)
                 .foregroundColor(ShopTheme.text)
                 .lineLimit(1).minimumScaleFactor(0.8)
                 .frame(height: 28)
                 .padding(.top, 16)
-            Text(description)
+            ZStack {
+                Text("Khám phá sản phẩm tại Trang chủ").opacity(isCart ? 1 : 0)
+                Text("Chào mừng bạn đến với FOSO").opacity(isCart ? 0 : 1)
+            }
                 .font(ShopTheme.emptyDescriptionFont)
                 .foregroundColor(ShopTheme.muted)
                 .lineLimit(1).minimumScaleFactor(0.8)

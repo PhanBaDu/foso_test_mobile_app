@@ -1,33 +1,18 @@
 import 'package:flutter/material.dart';
 import '../core/formatters.dart';
 import '../theme.dart';
-import '../widgets/empty_animation.dart';
 import '../view_models/cart_view_model.dart';
 
 class CartScreen extends StatelessWidget {
-  const CartScreen({super.key, required this.viewModel, this.active = true});
+  const CartScreen({super.key, required this.viewModel});
   final CartViewModel viewModel;
-  final bool active;
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: viewModel,
     builder: (context, _) {
       if (viewModel.lines.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              EmptyAnimation(active: active),
-              SizedBox(height: 16),
-              Text('Giỏ hàng của bạn đang trống'),
-              SizedBox(height: 8),
-              Text(
-                'Khám phá sản phẩm tại Trang chủ',
-                style: TextStyle(color: AppColors.muted, fontSize: 12),
-              ),
-            ],
-          ),
-        );
+        // Empty-state presentation belongs to the shell's shared animation layer.
+        return const SizedBox.shrink();
       }
       return SingleChildScrollView(
         child: Padding(

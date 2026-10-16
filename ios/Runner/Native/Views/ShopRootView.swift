@@ -18,6 +18,7 @@ struct NativeAppView: View {
 struct NativeShopRootView: View {
     @ObservedObject var viewModel: ShopViewModel
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var visibleToast: String?
     @State private var displayedTab: ShopTab
 
     init(viewModel: ShopViewModel) {
@@ -29,23 +30,50 @@ struct NativeShopRootView: View {
         VStack(spacing: 0) {
             NativeHeader(viewModel: viewModel)
             ZStack {
-                NativeHomeView(viewModel: viewModel.home, onCategory: viewModel.openCategory, onProduct: { viewModel.sheet = .product($0) }, onBuy: viewModel.buy, onArticle: { viewModel.sheet = .article($0) }, onNews: { viewModel.selectTab(.news) })
+                NativeHomeView(viewModel: viewModel.home, onCategory: viewModel.openCategory, onProduct: { viewModel.sheet = .product($0) }, onBuy: viewModel.buy, onArticle: { viewModel.sheet = .article($0) }, onNews: { viewModel.selectTab(.news) }, isActive: viewModel.tab == .home)
                     .modifier(tabPresentation(.home))
-                NativeCartView(viewModel: viewModel.cart, isActive: viewModel.tab == .cart)
+                NativeCartView(viewModel: viewModel.cart)
                     .modifier(tabPresentation(.cart))
                 NativeCategoryView(viewModel: viewModel.categories, onProduct: { viewModel.sheet = .product($0) })
                     .modifier(tabPresentation(.category))
                 news.modifier(tabPresentation(.news))
-                account.modifier(tabPresentation(.account))
+                // A single persistent Lottie instance serves both empty-state tabs.
+                NativeEmptyState(isCart: displayedTab == .cart, isPlaying: showsEmptyState(viewModel.tab))
+                    .opacity(showsEmptyState(displayedTab) ? 1 : 0)
+                    .allowsHitTesting(false)
+                    .accessibility(hidden: !showsEmptyState(viewModel.tab))
             }.frame(maxWidth: .infinity, maxHeight: .infinity).background(ShopTheme.background).clipShape(TopRoundedShape())
                 // Let real screen content continue behind the tabbar’s rounded top corners.
                 .padding(.bottom, -24)
-            if let message = viewModel.toast {
-                Button(action: { viewModel.selectTab(.cart) }) { Text(message + " · Xem giỏ").font(ShopTheme.font(12)).foregroundColor(.white).padding(12).frame(maxWidth: .infinity) }.background(ShopTheme.blue)
-            }
             NativeNavigationBar(viewModel: viewModel, selectedTab: displayedTab)
                 .zIndex(1)
         }.background(ShopTheme.blue.edgesIgnoringSafeArea(.top))
+            .overlay(
+                VStack {
+                    Spacer(minLength: 0)
+                    if let message = visibleToast {
+                        Button(action: {
+                            viewModel.dismissToast()
+                            viewModel.selectTab(.cart)
+                        }) {
+                            Text(message + " · Xem giỏ")
+                                .font(ShopTheme.font(12, .semibold)).foregroundColor(.white)
+                                .padding(12).frame(maxWidth: .infinity)
+                                .background(RoundedRectangle(cornerRadius: 12).fill(ShopTheme.blue))
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .accessibility(identifier: "cart-toast")
+                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
+                        .padding(.horizontal, 12)
+                        .padding(.bottom, 72)
+                    }
+                }
+            )
+            .onReceive(viewModel.$toast.removeDuplicates()) { message in
+                withAnimation(.easeInOut(duration: reduceMotion ? 0.10 : 0.24)) {
+                    visibleToast = message
+                }
+            }
             .modifier(KeyboardOverlayLayout())
             // Animate tab presentation only; countdown/cart updates remain immediate.
             .onReceive(viewModel.$tab.removeDuplicates()) { tab in
@@ -65,18 +93,18 @@ struct NativeShopRootView: View {
     private var news: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 0) {
-                SectionHeader(title: "Bài Viết Nổi Bật", icon: "article")
-                NativeArticleList(articles: viewModel.home.catalog.articles, onSelect: { viewModel.sheet = .article($0) }).padding(.bottom, 24)
+                SectionHeader(spacing: 12, title: "Bài Viết Nổi Bật", icon: "tab_news", iconColor: ShopTheme.blue)
+                NativeArticleList(articles: viewModel.home.catalog.articles,
+                                  onSelect: { viewModel.sheet = .article($0) },
+                                  gap: 12, cardPadding: 6, textGap: 12)
+                    .padding(.bottom, 36)
             }
         }
     }
-    private var account: some View {
-        NativeEmptyState(
-            title: "Tài khoản",
-            description: "Chào mừng bạn đến với FOSO",
-            isPlaying: viewModel.tab == .account
-        )
+    private func showsEmptyState(_ tab: ShopTab) -> Bool {
+        tab == .account || (tab == .cart && viewModel.cart.lines.isEmpty)
     }
+
 }
 
 // Keep each tab mounted so switching preserves its local state and scroll position.

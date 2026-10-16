@@ -24,7 +24,7 @@ for (const file of fs.readdirSync(header).filter(file => file.endsWith('.svg')))
   for (const scale of [1, 2, 3]) {
     const folder = path.join(root, 'assets/images', scale === 1 ? '' : `${scale}.0x`);
     fs.mkdirSync(folder, { recursive: true });
-    const size = file === 'notification.svg' ? 40 : 24;
+    const size = file === 'notification.svg' ? 40 : file === 'flashsale.svg' ? 18 : 24;
     const image = new Resvg(svg, { fitTo: { mode: 'width', value: size * scale } }).render();
     fs.writeFileSync(path.join(folder, 'ic_' + path.basename(file, '.svg') + '.png'), image.asPng());
   }
